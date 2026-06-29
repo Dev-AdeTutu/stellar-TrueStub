@@ -19,8 +19,8 @@ export default function BedroomTabs({ selected, onSelect }: BedroomTabsProps) {
           className={cn(
             'rounded-[10px] border px-6 py-3 text-sm font-medium transition',
             selected === tab.value
-              ? 'border-[#d9d9d9] bg-[#f7f4f0] text-[#333333]'
-              : 'border-[#e2e2e2] bg-white text-[#575757] hover:border-[#d0d0d0]'
+              ? 'border-gray-200 bg-gray-100 text-gray-900 dark:border-slate-600 dark:bg-slate-700 dark:text-white'
+              : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-gray-300'
           )}
         >
           {tab.label}
