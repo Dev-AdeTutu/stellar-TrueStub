@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import type { HotelListing } from '@/@types/hotel';
-import { cn } from '@/lib/utils';
-import Image from 'next/image';
-import { AiOutlineHeart } from 'react-icons/ai';
-import { FaFireAlt } from 'react-icons/fa';
-import AmenityIcons from './AmenityIcons';
-import { formatListingPrice } from './formatListingPrice';
+import type { HotelListing } from "@/@types/hotel";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { AiOutlineHeart } from "react-icons/ai";
+import { FaFireAlt } from "react-icons/fa";
+import AmenityIcons from "./AmenityIcons";
+import { formatListingPrice } from "./formatListingPrice";
 
 interface ApartmentCardProps {
   apartment: HotelListing;
@@ -38,7 +38,7 @@ export default function ApartmentCard({
         ) : null}
       </div>
 
-      <div className="flex flex-1 flex-col space-y-3 px-4 py-4">
+      <div className="flex flex-1 flex-col px-4 py-4">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-end gap-2">
             <span className="text-[30px] font-semibold leading-none text-[#10a156]">
@@ -48,15 +48,15 @@ export default function ApartmentCard({
           </div>
           <AiOutlineHeart
             className={cn(
-              'h-5 w-5',
+              "h-5 w-5",
               apartment.favorite
-                ? 'fill-[#ff2c2c] text-[#ff2c2c]'
-                : 'text-[#ff2c2c]'
+                ? "fill-[#ff2c2c] text-[#ff2c2c]"
+                : "text-[#ff2c2c]",
             )}
           />
         </div>
 
-        <div className="space-y-1">
+        <div className="mt-3 space-y-1">
           <h3 className="text-base font-semibold text-[#222222]">
             {apartment.name}
           </h3>
@@ -65,12 +65,15 @@ export default function ApartmentCard({
           </p>
         </div>
 
-        <AmenityIcons
-          bedrooms={apartment.bedrooms}
-          bathrooms={apartment.bathrooms}
-          petFriendly={apartment.petFriendly}
-          compact
-        />
+        {/* Fixed-height amenities zone keeps Book button aligned across all cards */}
+        <div className="mt-3 min-h-[56px]">
+          <AmenityIcons
+            bedrooms={apartment.bedrooms}
+            bathrooms={apartment.bathrooms}
+            petFriendly={apartment.petFriendly}
+            compact
+          />
+        </div>
 
         <button
           type="button"
