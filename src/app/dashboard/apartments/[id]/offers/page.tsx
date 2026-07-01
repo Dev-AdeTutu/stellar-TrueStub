@@ -3,9 +3,8 @@
 import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 // import { useSuspenseQuery } from "@apollo/client";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, MapPin, Bed, PawPrint, Bath } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { PropertySummaryHeader } from "@/components/dashboard/apartments/PropertySummaryHeader";
 import { InterestedPeopleTable } from "@/components/dashboard/apartments/InterestedPeopleTable";
 // TODO: Uncomment after running `npm run codegen` with Hasura running
 // import {
@@ -122,8 +121,15 @@ export default function InterestedPeoplePage() {
     bid_status: offer.bid_status,
   }));
 
+  const formatCurrency = (amount: number) =>
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 0,
+    }).format(amount);
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <div className="flex items-center gap-4">
         <Button
           variant="ghost"
@@ -138,13 +144,47 @@ export default function InterestedPeoplePage() {
         </h2>
       </div>
 
-      <PropertySummaryHeader
-        name={apartment.name}
-        address={apartment.address || apartment.location}
-        bedrooms={apartment.bedrooms || 0}
-        bathrooms={apartment.bathrooms || 0}
-        price={apartment.price}
-      />
+      <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-center gap-2 text-2xl font-semibold text-gray-900 dark:text-white">
+              <span className="text-orange-500">🔥</span>
+              {apartment.name}
+              <span className="font-normal text-gray-500 dark:text-gray-400">
+                · Interested people
+              </span>
+            </div>
+            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+              <span className="flex items-center gap-1">
+                <MapPin className="h-4 w-4 text-orange-500" />
+                {apartment.address || apartment.location}
+              </span>
+              <span className="flex items-center gap-1">
+                <Bed className="h-4 w-4 text-orange-500" />
+                {apartment.bedrooms} bd.
+              </span>
+              {apartment.pet_friendly !== false && (
+                <span className="flex items-center gap-1">
+                  <PawPrint className="h-4 w-4 text-orange-500" />
+                  pet friendly
+                </span>
+              )}
+              <span className="flex items-center gap-1">
+                <Bath className="h-4 w-4 text-orange-500" />
+                {apartment.bathrooms} ba.
+              </span>
+            </div>
+          </div>
+          <div className="shrink-0 text-right">
+            <p className="text-2xl font-bold text-orange-500">
+              {formatCurrency(apartment.price)}
+            </p>
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+              Per month
+            </p>
+          </div>
+        </div>
+      </div>
 
       <InterestedPeopleTable
         offers={mappedOffers}
