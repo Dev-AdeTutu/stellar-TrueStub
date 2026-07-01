@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import type { HotelAmenitySummary } from '@/@types/hotel';
-import { FaBath, FaBed, FaPaw } from 'react-icons/fa';
+import type { HotelAmenitySummary } from "@/@types/hotel";
+import { FaBath, FaBed, FaPaw } from "react-icons/fa";
 
 interface AmenityIconsProps extends HotelAmenitySummary {
   compact?: boolean;
@@ -40,21 +40,21 @@ export default function AmenityIcons({
 }: AmenityIconsProps) {
   return (
     <div
-      className={`flex flex-wrap items-center gap-4 ${compact ? 'gap-3' : 'gap-5'}`}
+      className={`flex flex-nowrap items-center overflow-hidden ${compact ? "gap-3" : "gap-5"}`}
     >
       <AmenityPill
         compact={compact}
-        icon={<FaBed className={compact ? 'h-3.5 w-3.5' : 'h-4 w-4'} />}
+        icon={<FaBed className={compact ? "h-3.5 w-3.5" : "h-4 w-4"} />}
         label={`${bedrooms} bd.`}
       />
       <AmenityPill
         compact={compact}
-        icon={<FaPaw className={compact ? 'h-3.5 w-3.5' : 'h-4 w-4'} />}
-        label={petFriendly ? 'pet friendly' : 'no pets'}
+        icon={<FaPaw className={compact ? "h-3.5 w-3.5" : "h-4 w-4"} />}
+        label={petFriendly ? "pet friendly" : "no pets"}
       />
       <AmenityPill
         compact={compact}
-        icon={<FaBath className={compact ? 'h-3.5 w-3.5' : 'h-4 w-4'} />}
+        icon={<FaBath className={compact ? "h-3.5 w-3.5" : "h-4 w-4"} />}
         label={`${bathrooms} ba.`}
       />
     </div>

@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import type { HotelListing } from '@/@types/hotel';
-import { cn } from '@/lib/utils';
-import Image from 'next/image';
-import { AiOutlineHeart } from 'react-icons/ai';
-import { FaFireAlt } from 'react-icons/fa';
-import AmenityIcons from './AmenityIcons';
-import { formatListingPrice } from './formatListingPrice';
+import type { HotelListing } from "@/@types/hotel";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { AiOutlineHeart } from "react-icons/ai";
+import { FaFireAlt } from "react-icons/fa";
+import AmenityIcons from "./AmenityIcons";
+import { formatListingPrice } from "./formatListingPrice";
 
 interface ApartmentCardProps {
   apartment: HotelListing;
@@ -18,8 +18,7 @@ export default function ApartmentCard({
   onClick,
 }: ApartmentCardProps) {
   return (
-    <button
-      type="button"
+    <div
       onClick={onClick}
       className="group w-full overflow-hidden rounded-[16px] border border-gray-200 bg-white text-left transition hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)] dark:border-slate-700 dark:bg-slate-800"
     >
@@ -39,7 +38,7 @@ export default function ApartmentCard({
         ) : null}
       </div>
 
-      <div className="space-y-3 px-4 py-4">
+      <div className="flex flex-1 flex-col px-4 py-4">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-end gap-2">
             <span className="text-[30px] font-semibold leading-none text-green-600 dark:text-green-400">
@@ -49,7 +48,7 @@ export default function ApartmentCard({
           </div>
           <AiOutlineHeart
             className={cn(
-              'h-5 w-5',
+              "h-5 w-5",
               apartment.favorite
                 ? 'fill-red-500 text-red-500'
                 : 'text-red-500 dark:text-red-500',
@@ -66,14 +65,27 @@ export default function ApartmentCard({
           </p>
         </div>
 
-        <AmenityIcons
-          bedrooms={apartment.bedrooms}
-          bathrooms={apartment.bathrooms}
-          petFriendly={apartment.petFriendly}
-          compact
-        />
+        {/* Fixed-height amenities zone keeps Book button aligned across all cards */}
+        <div className="mt-3 min-h-[56px]">
+          <AmenityIcons
+            bedrooms={apartment.bedrooms}
+            bathrooms={apartment.bathrooms}
+            petFriendly={apartment.petFriendly}
+            compact
+          />
+        </div>
+
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+          className="mt-auto w-full rounded-lg bg-orange-500 py-2 px-4 text-sm font-semibold text-white transition-colors duration-200 hover:bg-orange-600"
+        >
+          Book
+        </button>
       </div>
-    </button>
+    </div>
   );
 }
 
