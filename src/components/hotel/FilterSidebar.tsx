@@ -1,7 +1,6 @@
 'use client';
 
 import { HOTEL_CATEGORIES, HOTEL_LOCATIONS } from '@/lib/mockData/hotels';
-import { cn } from '@/lib/utils';
 import { formatListingPrice } from './formatListingPrice';
 
 interface FilterSidebarProps {
@@ -38,12 +37,12 @@ function CheckboxRow({
   onChange: () => void;
 }) {
   return (
-    <label className="flex items-center gap-3 text-sm text-[#2f2f2f]">
+    <label className="flex items-center gap-3 text-sm text-gray-700 dark:text-gray-300">
       <input
         type="checkbox"
         checked={checked}
         onChange={onChange}
-        className="h-4 w-4 rounded border-[#d8d8d8] text-[#ff6a00] focus:ring-[#ff6a00]"
+        className="h-4 w-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500 dark:border-slate-600"
       />
       {label}
     </label>
@@ -64,9 +63,9 @@ export default function FilterSidebar({
   const rightPercent = ((maxPrice - 3200) / (206000 - 3200)) * 100;
 
   return (
-    <aside className="w-full border-b border-[#e8e1da] px-6 py-8 lg:w-[215px] lg:border-b-0 lg:border-r">
+    <aside className="w-full border-b border-gray-200 px-6 py-8 lg:w-[215px] lg:border-b-0 lg:border-r dark:border-slate-700 dark:bg-slate-900/0">
       <section className="pb-8">
-        <h2 className="mb-5 text-[15px] font-semibold text-[#1d1d1d]">
+        <h2 className="mb-5 text-[15px] font-semibold text-gray-900 dark:text-white">
           Category
         </h2>
         <div className="space-y-3">
@@ -81,13 +80,13 @@ export default function FilterSidebar({
         </div>
       </section>
 
-      <div className="my-0 h-px bg-[#ebe3dd]" />
+      <div className="my-0 h-px bg-gray-200 dark:bg-slate-700" />
 
       <section className="py-8">
-        <h2 className="mb-3 text-[15px] font-semibold text-[#1d1d1d]">
+        <h2 className="mb-3 text-[15px] font-semibold text-gray-900 dark:text-white">
           Price Range
         </h2>
-        <p className="mb-5 text-sm text-[#2f2f2f]">
+        <p className="mb-5 text-sm text-gray-700 dark:text-gray-300">
           {formatListingPrice(minPrice)} - {formatListingPrice(maxPrice)}
         </p>
 
@@ -96,25 +95,25 @@ export default function FilterSidebar({
             {PRICE_BARS.map((bar) => (
               <span
                 key={bar.id}
-                className="w-full rounded-t-sm bg-[#ffbf93]"
+                className="w-full rounded-t-sm bg-orange-200 dark:bg-orange-900/30"
                 style={{ height: `${bar.height}px` }}
               />
             ))}
           </div>
-          <div className="relative h-1 rounded-full bg-[#ffd7bd]">
+          <div className="relative h-1 rounded-full bg-orange-100 dark:bg-orange-900/20">
             <div
-              className="absolute h-1 rounded-full bg-[#ff6a00]"
+              className="absolute h-1 rounded-full bg-orange-500"
               style={{
                 left: `${leftPercent}%`,
                 width: `${Math.max(rightPercent - leftPercent, 4)}%`,
               }}
             />
             <span
-              className="absolute top-1/2 h-4 w-4 -translate-y-1/2 rounded-full border-2 border-white bg-[#ff6a00] shadow"
+              className="absolute top-1/2 h-4 w-4 -translate-y-1/2 rounded-full border-2 border-white bg-orange-500 shadow"
               style={{ left: `calc(${leftPercent}% - 8px)` }}
             />
             <span
-              className="absolute top-1/2 h-4 w-4 -translate-y-1/2 rounded-full border-2 border-white bg-[#ff6a00] shadow"
+              className="absolute top-1/2 h-4 w-4 -translate-y-1/2 rounded-full border-2 border-white bg-orange-500 shadow"
               style={{ left: `calc(${rightPercent}% - 8px)` }}
             />
           </div>
@@ -143,10 +142,10 @@ export default function FilterSidebar({
         </div>
       </section>
 
-      <div className="my-0 h-px bg-[#ebe3dd]" />
+      <div className="my-0 h-px bg-gray-200 dark:bg-slate-700" />
 
       <section className="pt-8">
-        <h2 className="mb-5 text-[15px] font-semibold text-[#1d1d1d]">
+        <h2 className="mb-5 text-[15px] font-semibold text-gray-900 dark:text-white">
           Location
         </h2>
         <div className="space-y-3">
@@ -163,3 +162,4 @@ export default function FilterSidebar({
     </aside>
   );
 }
+

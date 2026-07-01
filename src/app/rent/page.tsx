@@ -1,12 +1,7 @@
 "use client";
 
 import type { HotelListing } from "@/@types/hotel";
-import {
-  ApartmentGrid,
-  BedroomTabs,
-  FilterSidebar,
-  HotelHeader,
-} from "@/components/hotel";
+import { ApartmentGrid, BedroomTabs, FilterSidebar, HotelHeader } from "@/components/hotel";
 import { STUB_HOTELS } from "@/lib/mockData/hotels";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -24,10 +19,10 @@ export default function HotelListingPage() {
     "San José",
     "Heredia",
   ]);
-  const [selectedBedrooms, setSelectedBedrooms] = useState("all");
+  const [selectedBedrooms, setSelectedBedrooms] = useState<string>("all");
   const [sortOption] = useState<SortOption>("relevance");
-  const [minPrice, setMinPrice] = useState(3200);
-  const [maxPrice, setMaxPrice] = useState(206000);
+  const [minPrice, setMinPrice] = useState<number>(3200);
+  const [maxPrice, setMaxPrice] = useState<number>(206000);
 
   const filteredApartments = useMemo(() => {
     const apartments = STUB_HOTELS.filter((apartment) => {
@@ -43,9 +38,7 @@ export default function HotelListingPage() {
       const matchesPrice =
         apartment.price >= minPrice && apartment.price <= maxPrice;
 
-      return (
-        matchesCategory && matchesLocation && matchesBedroom && matchesPrice
-      );
+      return matchesCategory && matchesLocation && matchesBedroom && matchesPrice;
     });
 
     if (sortOption === "price-low") {
@@ -59,26 +52,17 @@ export default function HotelListingPage() {
     return [...apartments].sort(
       (left, right) => Number(right.promoted) - Number(left.promoted),
     );
-  }, [
-    maxPrice,
-    minPrice,
-    selectedBedrooms,
-    selectedCategories,
-    selectedLocations,
-    sortOption,
-  ]);
+  }, [maxPrice, minPrice, selectedBedrooms, selectedCategories, selectedLocations, sortOption]);
 
   const toggleValue = (values: string[], value: string) =>
-    values.includes(value)
-      ? values.filter((item) => item !== value)
-      : [...values, value];
+    values.includes(value) ? values.filter((item) => item !== value) : [...values, value];
 
   const handleApartmentClick = (apartment: HotelListing) => {
     router.push(`/rent/${apartment.id}`);
   };
 
   return (
-    <div className="min-h-screen bg-white text-[#1c1c1c]">
+    <div className="min-h-screen bg-white text-gray-900 dark:bg-slate-900 dark:text-white">
       <HotelHeader />
 
       <div className="mx-auto flex max-w-[1180px] flex-col lg:flex-row">
@@ -100,35 +84,30 @@ export default function HotelListingPage() {
         <main className="flex-1 px-6 py-8 lg:px-12">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div>
-              <h1 className="text-[24px] leading-tight text-[#1d1d1d] sm:text-[30px]">
+              <h1 className="text-[24px] leading-tight text-gray-900 sm:text-[30px] dark:text-white">
                 Available for rent in{" "}
                 <span className="font-semibold">Costa Rica, San José</span>
               </h1>
-              <p className="mt-3 text-sm text-[#515151]">204 units available</p>
+              <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">204 units available</p>
             </div>
 
-            <div className="flex items-center gap-2 text-sm text-[#202020]">
+            <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
               <BsSortDownAlt className="h-4 w-4" />
               <span>Sort by:</span>
-              <span className="font-semibold text-[#ff6a00]">Relevance</span>
+              <span className="font-semibold text-orange-500">Relevance</span>
             </div>
           </div>
 
           <div className="mt-6">
-            <BedroomTabs
-              selected={selectedBedrooms}
-              onSelect={setSelectedBedrooms}
-            />
+            <BedroomTabs selected={selectedBedrooms} onSelect={setSelectedBedrooms} />
           </div>
 
           <div className="mt-8">
-            <ApartmentGrid
-              apartments={filteredApartments}
-              onApartmentClick={handleApartmentClick}
-            />
+            <ApartmentGrid apartments={filteredApartments} onApartmentClick={handleApartmentClick} />
           </div>
         </main>
       </div>
     </div>
   );
 }
+
