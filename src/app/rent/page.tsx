@@ -62,7 +62,11 @@ export default function HotelListingPage() {
   };
 
   return (
+<<<<<<< HEAD:src/app/rent/page.tsx
     <div className="min-h-screen bg-white text-gray-900 dark:bg-slate-900 dark:text-white">
+=======
+    <div className="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-white">
+>>>>>>> 945efaa (feat: Add dark/light mode support to /hotel listing page (#383)):src/app/hotel/page.tsx
       <HotelHeader />
 
       <div className="mx-auto flex max-w-[1180px] flex-col lg:flex-row">
@@ -84,14 +88,23 @@ export default function HotelListingPage() {
         <main className="flex-1 px-6 py-8 lg:px-12">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div>
+<<<<<<< HEAD:src/app/rent/page.tsx
               <h1 className="text-[24px] leading-tight text-gray-900 sm:text-[30px] dark:text-white">
                 Available for rent in{" "}
+=======
+              <h1 className="text-[24px] leading-tight text-gray-900 dark:text-white sm:text-[30px]">
+                Available for rent in{' '}
+>>>>>>> 945efaa (feat: Add dark/light mode support to /hotel listing page (#383)):src/app/hotel/page.tsx
                 <span className="font-semibold">Costa Rica, San José</span>
               </h1>
               <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">204 units available</p>
             </div>
 
+<<<<<<< HEAD:src/app/rent/page.tsx
             <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+=======
+            <div className="flex items-center gap-2 text-sm text-gray-900 dark:text-white">
+>>>>>>> 945efaa (feat: Add dark/light mode support to /hotel listing page (#383)):src/app/hotel/page.tsx
               <BsSortDownAlt className="h-4 w-4" />
               <span>Sort by:</span>
               <span className="font-semibold text-orange-500">Relevance</span>
