@@ -46,7 +46,7 @@ export function NotificationItem({
           <p className="text-xs text-gray-500">{timestamp}</p>
         </div>
         {!read && (
-          <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500" />
+          <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-purple-500" aria-label="Unread" />
         )}
       </div>
     </button>
