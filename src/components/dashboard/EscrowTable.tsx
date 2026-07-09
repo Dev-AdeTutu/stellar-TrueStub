@@ -111,49 +111,49 @@ export function EscrowTable({ escrows, userRole }: EscrowTableProps) {
   };
 
   return (
-    <div className="rounded-md border dark:border-gray-700">
+    <div className="bg-white dark:bg-slate-800 rounded-md border border-gray-200 dark:border-slate-700">
       <Table>
         <TableHeader>
-          <TableRow className="dark:border-gray-700">
-            <TableHead className="w-[50px] dark:text-gray-200">
+          <TableRow className="bg-gray-50 dark:bg-slate-700 border-b border-gray-200 dark:border-slate-700">
+            <TableHead className="w-[50px] text-gray-600 dark:text-gray-300 font-semibold">
               <Checkbox />
             </TableHead>
-            <TableHead className="dark:text-gray-200">Booking ID</TableHead>
-            <TableHead className="dark:text-gray-200">Hotel</TableHead>
-            <TableHead className="dark:text-gray-200">Check-in</TableHead>
-            <TableHead className="dark:text-gray-200">Check-out</TableHead>
-            <TableHead className="dark:text-gray-200">Amount</TableHead>
-            <TableHead className="dark:text-gray-200">Status</TableHead>
-            <TableHead className="text-right dark:text-gray-200">Actions</TableHead>
+            <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">Booking ID</TableHead>
+            <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">Hotel</TableHead>
+            <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">Check-in</TableHead>
+            <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">Check-out</TableHead>
+            <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">Amount</TableHead>
+            <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">Status</TableHead>
+            <TableHead className="text-right text-gray-600 dark:text-gray-300 font-semibold">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {escrows.length === 0 ? (
-            <TableRow className="dark:border-gray-700">
-              <TableCell colSpan={8} className="h-24 text-center dark:text-gray-400">
+            <TableRow className="border-b border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+              <TableCell colSpan={8} className="h-24 text-center text-gray-500 dark:text-slate-400">
                 No escrows found
               </TableCell>
             </TableRow>
           ) : (
             escrows.map((escrow) => (
-              <TableRow key={escrow.id} className="dark:border-gray-700 dark:hover:bg-gray-800">
+              <TableRow key={escrow.id} className="border-b border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700/50">
                 <TableCell>
                   <Checkbox />
                 </TableCell>
-                <TableCell className="font-medium dark:text-white">
+                <TableCell className="font-mono text-sm text-gray-500 dark:text-gray-400">
                   {escrow.metadata?.bookingId || 'N/A'}
                 </TableCell>
-                <TableCell className="dark:text-white">
+                <TableCell className="text-gray-900 dark:text-white">
                   <div className="font-medium">
                     {escrow.metadata?.hotelName || 'N/A'}
                   </div>
-                  <div className="text-xs text-muted-foreground">
+                  <div className="text-xs text-muted-foreground dark:text-slate-400">
                     {escrow.marker.slice(0, 6)}...{escrow.marker.slice(-4)}
                   </div>
                 </TableCell>
-                <TableCell className="dark:text-white">{formatDate(escrow.metadata?.checkInDate)}</TableCell>
-                <TableCell className="dark:text-white">{formatDate(escrow.metadata?.checkOutDate)}</TableCell>
-                <TableCell className="dark:text-white">
+                <TableCell className="text-gray-900 dark:text-white">{formatDate(escrow.metadata?.checkInDate)}</TableCell>
+                <TableCell className="text-gray-900 dark:text-white">{formatDate(escrow.metadata?.checkOutDate)}</TableCell>
+                <TableCell className="text-gray-900 dark:text-white">
                   {formatCurrency(escrow.amount, escrow.asset.code)}
                 </TableCell>
                 <TableCell>
