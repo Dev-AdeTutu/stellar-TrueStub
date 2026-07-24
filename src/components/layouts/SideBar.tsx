@@ -65,11 +65,11 @@ export function SideBar({
           </span>
         </Link>
         <Link
-          href="/dashboard/guest"
+          href="/guest/suggestions"
           onClick={onClose}
           className={cn(
             "flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors duration-200 w-full group relative dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white",
-            pathname === "/dashboard/guest" &&
+            pathname === "/guest/suggestions" &&
               "bg-accent font-medium dark:bg-gray-800 dark:text-white",
           )}
         >
