@@ -144,7 +144,7 @@ export function SideBar({
               "bg-accent font-medium dark:bg-gray-800 dark:text-white",
           )}
         >
-          <Users2 className="w-6 h-6 shrink-0 dark:text-gray-400" />
+          <Users className="w-6 h-6 shrink-0 dark:text-gray-400" />
           <span className="md:hidden lg:block">Interested People</span>
           <span className="hidden md:group-hover:block lg:group-hover:hidden absolute left-14 bg-popover text-popover-foreground px-2 py-1 rounded shadow-md text-xs z-50 whitespace-nowrap">
             Interested People

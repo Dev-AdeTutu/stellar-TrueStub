@@ -20,11 +20,7 @@ export default function ApartmentCard({
   return (
     <div
       onClick={onClick}
-<<<<<<< HEAD
-      className="group w-full overflow-hidden rounded-[16px] border border-gray-200 bg-white text-left transition hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)] dark:border-slate-700 dark:bg-slate-800"
-=======
       className="group w-full overflow-hidden rounded-[16px] border dark:border-slate-700 bg-white dark:bg-slate-800 text-left transition hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(0,0,0,0.08)]"
->>>>>>> 945efaa (feat: Add dark/light mode support to /hotel listing page (#383))
     >
       <div className="relative">
         <Image
@@ -45,28 +41,17 @@ export default function ApartmentCard({
       <div className="flex flex-1 flex-col px-4 py-4">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-end gap-2">
-<<<<<<< HEAD
-            <span className="text-[30px] font-semibold leading-none text-green-600 dark:text-green-400">
-              {formatListingPrice(apartment.price)}
-            </span>
-            <span className="pb-1 text-xs text-gray-500 dark:text-gray-400">Per month</span>
-=======
             <span className="text-[30px] font-semibold leading-none text-green-600">
               {formatListingPrice(apartment.price)}
             </span>
             <span className="pb-1 text-xs text-gray-500">Per month</span>
->>>>>>> 945efaa (feat: Add dark/light mode support to /hotel listing page (#383))
           </div>
           <AiOutlineHeart
             className={cn(
               "h-5 w-5",
               apartment.favorite
                 ? 'fill-red-500 text-red-500'
-<<<<<<< HEAD
-                : 'text-red-500 dark:text-red-500',
-=======
                 : 'text-red-500'
->>>>>>> 945efaa (feat: Add dark/light mode support to /hotel listing page (#383))
             )}
           />
         </div>
@@ -75,11 +60,7 @@ export default function ApartmentCard({
           <h3 className="text-base font-semibold text-gray-900 dark:text-white">
             {apartment.name}
           </h3>
-<<<<<<< HEAD
-          <p className="line-clamp-1 text-xs text-gray-500 dark:text-gray-400">
-=======
           <p className="line-clamp-1 text-xs text-gray-500">
->>>>>>> 945efaa (feat: Add dark/light mode support to /hotel listing page (#383))
             {apartment.address}
           </p>
         </div>
