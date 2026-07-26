@@ -97,13 +97,14 @@ export default function NewHotelPage() {
 
             {/* Name */}
             <div>
-              <label className={labelClass}>
+              <label htmlFor="hotel-name" className={labelClass}>
                 Hotel Name <span className="text-red-500">*</span>
               </label>
               <div className="relative">
                 <Building2 className="absolute left-3 top-1/2 -translate-y-1/2
                                       h-4 w-4 text-orange-400" />
                 <input
+                  id="hotel-name"
                   type="text"
                   required
                   maxLength={20}
@@ -120,13 +121,14 @@ export default function NewHotelPage() {
 
             {/* Address */}
             <div>
-              <label className={labelClass}>
+              <label htmlFor="hotel-address" className={labelClass}>
                 Address <span className="text-red-500">*</span>
               </label>
               <div className="relative">
                 <MapPin className="absolute left-3 top-1/2 -translate-y-1/2
                                    h-4 w-4 text-orange-400" />
                 <input
+                  id="hotel-address"
                   type="text"
                   required
                   maxLength={50}
@@ -140,8 +142,9 @@ export default function NewHotelPage() {
 
             {/* Location area */}
             <div>
-              <label className={labelClass}>Location Area</label>
+              <label htmlFor="hotel-location-area" className={labelClass}>Location Area</label>
               <input
+                id="hotel-location-area"
                 type="text"
                 maxLength={20}
                 placeholder="e.g. San José Centro"
@@ -154,8 +157,9 @@ export default function NewHotelPage() {
             {/* Coordinates */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className={labelClass}>Latitude</label>
+                <label htmlFor="hotel-latitude" className={labelClass}>Latitude</label>
                 <input
+                  id="hotel-latitude"
                   type="number"
                   step="any"
                   placeholder="9.9281"
@@ -165,8 +169,9 @@ export default function NewHotelPage() {
                 />
               </div>
               <div>
-                <label className={labelClass}>Longitude</label>
+                <label htmlFor="hotel-longitude" className={labelClass}>Longitude</label>
                 <input
+                  id="hotel-longitude"
                   type="number"
                   step="any"
                   placeholder="-84.0907"
@@ -187,13 +192,14 @@ export default function NewHotelPage() {
 
             {/* Description */}
             <div>
-              <label className={labelClass}>
+              <label htmlFor="hotel-description" className={labelClass}>
                 Description
               </label>
               <div className="relative">
                 <FileText className="absolute left-3 top-3
                                      h-4 w-4 text-orange-400" />
                 <textarea
+                  id="hotel-description"
                   maxLength={50}
                   rows={5}
                   placeholder="Describe the hotel — features, nearby amenities, special conditions..."
