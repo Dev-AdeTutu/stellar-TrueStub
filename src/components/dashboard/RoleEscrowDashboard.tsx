@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Download, Filter } from "lucide-react";
+import { exportTransactionsToCSV } from "@/lib/exportToCSV";
+import type { TransactionRow } from "@/lib/exportToCSV";
 import { DashboardHeader } from "./DashboardHeader";
 import { EscrowsByStatus } from "./EscrowsByStatus";
 import { RecentActivity } from "./RecentActivity";
@@ -99,64 +102,65 @@ export function RoleEscrowDashboard({
   const [notifications, setNotifications] =
     useState<NotificationData[]>(initialNotifications);
   const [showAnalytics, setShowAnalytics] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [isPolling, setIsPolling] = useState(false);
   const isMountedRef = useRef(true);
   const isPollingRef = useRef(false);
 
-   // Real-time updates using Trustless Work notifications
-   useEffect(() => {
-     if (isLoading) return;
+  // Real-time updates using Trustless Work notifications
+  useEffect(() => {
+    if (isLoading) return;
 
-     const checkUpdates = async () => {
-       // Prevent overlapping requests
-       if (isPollingRef.current) return;
-       isPollingRef.current = true;
+    const checkUpdates = async () => {
+      // Prevent overlapping requests
+      if (isPollingRef.current) return;
+      isPollingRef.current = true;
 
-       try {
-         if (isMountedRef.current) setIsPolling(true);
-         const pendingNotifications = await checkPendingNotifications();
-         const milestoneUpdates = await checkMilestoneNotifications();
+      try {
+        if (isMountedRef.current) setIsPolling(true);
+        const pendingNotifications = await checkPendingNotifications();
+        const milestoneUpdates = await checkMilestoneNotifications();
 
-         // Combine and deduplicate notifications
-         const allNotifications = [...pendingNotifications, ...milestoneUpdates];
-         const uniqueNotifications = allNotifications.filter(
-           (notif, index, self) =>
-             index === self.findIndex((n) => n.id === notif.id),
-         );
+        // Combine and deduplicate notifications
+        const allNotifications = [...pendingNotifications, ...milestoneUpdates];
+        const uniqueNotifications = allNotifications.filter(
+          (notif, index, self) =>
+            index === self.findIndex((n) => n.id === notif.id),
+        );
 
-         if (uniqueNotifications.length > 0 && isMountedRef.current) {
-           setNotifications((prev) => {
-             // Merge with existing notifications, avoiding duplicates
-             const existingIds = new Set(prev.map((n) => n.id));
-             const newNotifications = uniqueNotifications.filter(
-               (n) => !existingIds.has(n.id),
-             );
-             return [...prev, ...newNotifications];
-           });
-         }
-       } catch (error) {
-         console.error("Error checking for updates:", error);
-       } finally {
-         isPollingRef.current = false;
-         if (isMountedRef.current) {
-           setIsPolling(false);
-         }
-       }
-     };
+        if (uniqueNotifications.length > 0 && isMountedRef.current) {
+          setNotifications((prev) => {
+            // Merge with existing notifications, avoiding duplicates
+            const existingIds = new Set(prev.map((n) => n.id));
+            const newNotifications = uniqueNotifications.filter(
+              (n) => !existingIds.has(n.id),
+            );
+            return [...prev, ...newNotifications];
+          });
+        }
+      } catch (error) {
+        console.error("Error checking for updates:", error);
+      } finally {
+        isPollingRef.current = false;
+        if (isMountedRef.current) {
+          setIsPolling(false);
+        }
+      }
+    };
 
-     // Initial check
-     checkUpdates();
+    // Initial check
+    checkUpdates();
 
-     // Poll every 15 seconds
-     const interval = setInterval(checkUpdates, 15000);
+    // Poll every 15 seconds
+    const interval = setInterval(checkUpdates, 15000);
 
-     // Cleanup function
-     return () => {
-       isMountedRef.current = false;
-       isPollingRef.current = false;
-       clearInterval(interval);
-     };
-   }, [isLoading]);
+    // Cleanup function
+    return () => {
+      isMountedRef.current = false;
+      isPollingRef.current = false;
+      clearInterval(interval);
+    };
+  }, [isLoading]);
 
   if (isLoading) {
     return (
@@ -497,7 +501,9 @@ export function RoleEscrowDashboard({
                               {notification.message}
                             </p>
                             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                              {formatNotificationTimestamp(notification.timestamp)}
+                              {formatNotificationTimestamp(
+                                notification.timestamp,
+                              )}
                             </p>
                           </div>
                         </div>
@@ -524,47 +530,106 @@ export function RoleEscrowDashboard({
         </div>
 
         {/* Transactions Table */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700">
-          <div className="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
-            <h2 className="text-lg font-semibold flex items-center">
-              <svg
-                className="w-5 h-5 mr-2 text-indigo-600 dark:text-indigo-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-                />
-              </svg>
-              Recent Transactions
-            </h2>
-            <button className="text-sm font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 flex items-center">
-              View All
-              <svg
-                className="w-4 h-4 ml-1"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </button>
-          </div>
-          <div className="overflow-x-auto">
-            <EscrowTable escrows={escrows} userRole={userRole} />
-          </div>
-        </div>
+        {(() => {
+          const filteredEscrows = escrows.filter((escrow) => {
+            if (statusFilter !== "all" && escrow.status !== statusFilter) {
+              return false;
+            }
+            return true;
+          });
+
+          const filteredTransactions: TransactionRow[] = filteredEscrows.map(
+            (e) => ({
+              bookingId: e.metadata?.bookingId || e.id,
+              hotel: e.metadata?.hotelName || "N/A",
+              checkIn: e.metadata?.checkInDate || "N/A",
+              checkOut: e.metadata?.checkOutDate || "N/A",
+              amount: e.amount,
+              status: e.status,
+            }),
+          );
+
+          return (
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700">
+              <div className="p-4 border-b border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <h2 className="text-lg font-semibold flex items-center">
+                  <svg
+                    className="w-5 h-5 mr-2 text-indigo-600 dark:text-indigo-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                    />
+                  </svg>
+                  Recent Transactions
+                </h2>
+                <div className="flex items-center gap-3 flex-wrap">
+                  <div className="flex items-center gap-2">
+                    <Filter className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                    <select
+                      value={statusFilter}
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                      className="text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-1.5 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
+                      aria-label="Filter by status"
+                    >
+                      <option value="all">All Statuses</option>
+                      <option value="pending">Pending</option>
+                      <option value="funded">Funded</option>
+                      <option value="check_in_approved">
+                        Check-in Approved
+                      </option>
+                      <option value="check_out_approved">
+                        Check-out Approved
+                      </option>
+                      <option value="completed">Completed</option>
+                      <option value="cancelled">Cancelled</option>
+                    </select>
+                  </div>
+
+                  <button
+                    onClick={() =>
+                      exportTransactionsToCSV(
+                        filteredTransactions,
+                        `safetrust-transactions-${new Date().toISOString().split("T")[0]}.csv`,
+                      )
+                    }
+                    className="flex items-center gap-2 text-sm border border-slate-600 rounded-lg px-3 py-1.5 hover:bg-slate-700 transition-colors text-gray-700 dark:text-gray-300 dark:hover:bg-slate-700"
+                  >
+                    <Download className="h-4 w-4" />
+                    Export CSV
+                  </button>
+
+                  <button className="text-sm font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 flex items-center">
+                    View All
+                    <svg
+                      className="w-4 h-4 ml-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div className="overflow-x-auto">
+                <EscrowTable escrows={filteredEscrows} userRole={userRole} />
+              </div>
+            </div>
+          );
+        })()}
       </div>
     </div>
   );

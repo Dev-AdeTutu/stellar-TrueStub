@@ -60,7 +60,7 @@ export const useWalletDetection = (): WalletDetectionResult & {
           freighterAddress = await retrieveFreighterAddress();
 
           if (freighterAddress) {
-            useGlobalAuthenticationStore.getState().setAddress(freighterAddress);
+            useGlobalAuthenticationStore.getState().connectWalletStore(freighterAddress, "Freighter");
           }
         }
 
