@@ -49,7 +49,7 @@ export function EscrowTable({ escrows, userRole }: EscrowTableProps) {
   const router = useRouter();
 
   const handleViewDetails = (escrowId: string) => {
-    router.push(`/escrows/${escrowId}`);
+    router.push(`/dashboard/escrow/${escrowId}`);
   };
 
   const formatCurrency = (amount: number, currency: string) => {
