@@ -10,7 +10,11 @@ import {
   FaSearch,
 } from 'react-icons/fa';
 
-export default function HotelHeader() {
+interface HotelHeaderProps {
+  showHostSwitch?: boolean;
+}
+
+export default function HotelHeader({ showHostSwitch = false }: HotelHeaderProps) {
   return (
     <header className="border-b border-[#e8e1da] bg-white dark:border-slate-700 dark:bg-slate-900">
       <div className="mx-auto flex max-w-[1180px] items-center gap-4 px-5 py-5 lg:px-7">
@@ -37,6 +41,14 @@ export default function HotelHeader() {
         </div>
 
         <div className="ml-auto flex items-center gap-5">
+          {showHostSwitch && (
+            <Link
+              href="/dashboard/escrow-dashboard"
+              className="hidden text-sm font-semibold text-orange-500 transition-colors hover:text-orange-600 sm:block whitespace-nowrap"
+            >
+              Switch to Host view
+            </Link>
+          )}
           <div className="hidden md:block">
             <ThemeToggle />
           </div>
