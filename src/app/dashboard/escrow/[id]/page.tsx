@@ -7,6 +7,7 @@ import { ProcessStepper } from "@/components/escrow/ProcessStepper";
 import { EscrowPartyInfo } from "@/components/escrow/views/EscrowPartyInfo";
 import { MilestoneProgress } from "@/components/dashboard/milestone-progress";
 import { getStubEscrow } from "@/components/escrow/views/stubEscrow";
+import { formatEscrowAmount } from "@/lib/formatEscrowAmount";
 import type { Milestone } from "@/components/dashboard/RoleEscrowDashboard";
 
 const milestoneData: Milestone[] = [
@@ -37,11 +38,14 @@ export default async function EscrowDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const amount = 4000;
+  const currency = "USDC";
   const escrow = {
     ...getStubEscrow(id),
     status: "FUNDED" as const,
-    amount: 4000,
-    currency: "USDC",
+    amount,
+    currency,
+    total: formatEscrowAmount(amount, currency),
   };
 
   return (
@@ -66,12 +70,7 @@ export default async function EscrowDetailPage({
                 <div>
                   <p className="text-sm text-gray-400">Escrow amount</p>
                   <p className="text-2xl font-semibold text-gray-900 dark:text-white">
-                    {escrow.amount.toLocaleString("en-US", {
-                      style: "currency",
-                      currency: escrow.currency,
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
+                    {formatEscrowAmount(escrow.amount, escrow.currency)}
                   </p>
                 </div>
                 <div>
