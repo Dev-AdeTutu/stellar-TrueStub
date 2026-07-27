@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { EscrowOverviewCard } from "@/components/escrow/EscrowOverviewCard";
@@ -33,13 +31,14 @@ const milestoneData: Milestone[] = [
   },
 ];
 
-export default function EscrowDetailPage({
+export default async function EscrowDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const escrow = {
-    ...getStubEscrow(params.id),
+    ...getStubEscrow(id),
     status: "FUNDED" as const,
     amount: 4000,
     currency: "USDC",
@@ -47,8 +46,11 @@ export default function EscrowDetailPage({
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
-      <div className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors w-fit">
-        <Link href="/dashboard/escrow" className="flex items-center gap-2">
+      <div className="flex items-center gap-2 text-sm w-fit">
+        <Link
+          href="/dashboard/escrow"
+          className="flex items-center gap-2 text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+        >
           <ArrowLeft className="h-4 w-4" />
           Back to My Escrows
         </Link>
