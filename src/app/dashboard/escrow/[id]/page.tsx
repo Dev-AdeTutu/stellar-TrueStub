@@ -38,14 +38,18 @@ export default async function EscrowDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const stub = getStubEscrow(id);
   const amount = 4000;
   const currency = "USDC";
+  const formattedAmount = formatEscrowAmount(amount, currency);
   const escrow = {
-    ...getStubEscrow(id),
+    ...stub,
     status: "FUNDED" as const,
     amount,
     currency,
-    total: formatEscrowAmount(amount, currency),
+    subtotal: formattedAmount,
+    discount: formatEscrowAmount(0, currency),
+    total: formattedAmount,
   };
 
   return (
@@ -70,7 +74,7 @@ export default async function EscrowDetailPage({
                 <div>
                   <p className="text-sm text-gray-400">Escrow amount</p>
                   <p className="text-2xl font-semibold text-gray-900 dark:text-white">
-                    {formatEscrowAmount(escrow.amount, escrow.currency)}
+                    {formattedAmount}
                   </p>
                 </div>
                 <div>
@@ -134,7 +138,7 @@ export default async function EscrowDetailPage({
               </div>
               <div className="flex justify-between text-sm text-gray-500 dark:text-slate-400">
                 <span>Amount billed</span>
-                <span>{escrow.total}</span>
+                <span>{formattedAmount}</span>
               </div>
               <div className="flex justify-between text-sm text-gray-500 dark:text-slate-400">
                 <span>Billing details</span>
