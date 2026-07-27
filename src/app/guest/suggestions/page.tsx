@@ -66,7 +66,7 @@ export default function GuestSuggestionsPage() {
     <div className="min-h-screen bg-white dark:bg-slate-900
                     text-gray-900 dark:text-white">
       {/* Standalone header */}
-      <HotelHeader />
+      <HotelHeader showHostSwitch />
 
       <div className="mx-auto max-w-[1280px] px-4 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr_220px] gap-6">
