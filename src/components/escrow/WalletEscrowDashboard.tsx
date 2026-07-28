@@ -24,7 +24,7 @@ import { useEscrowsBySignerQuery } from '@/components/tw-blocks/tanstack/useEscr
 import { useWalletContext } from '@/components/tw-blocks/wallet-kit/WalletProvider';
 import type { GetEscrowsFromIndexerResponse } from '@trustless-work/escrow/types';
 
-interface WalletEscrowDashboardProps {
+export interface WalletEscrowDashboardProps {
   /**
    * Optional custom wallet address (defaults to connected wallet)
    */
