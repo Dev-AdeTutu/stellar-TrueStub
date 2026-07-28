@@ -9,6 +9,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { ChevronRight } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Download, Filter } from "lucide-react";
+import { exportTransactionsToCSV } from "@/lib/exportToCSV";
+import type { TransactionRow } from "@/lib/exportToCSV";
 import { DashboardHeader } from "./DashboardHeader";
 import { EscrowsByStatus } from "./EscrowsByStatus";
 import { RecentActivity } from "./RecentActivity";
@@ -107,6 +112,7 @@ export function RoleEscrowDashboard({
   const [notifications, setNotifications] =
     useState<NotificationData[]>(initialNotifications);
   const [showAnalytics, setShowAnalytics] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [isPolling, setIsPolling] = useState(false);
   const isMountedRef = useRef(true);
   const isPollingRef = useRef(false);
@@ -596,7 +602,9 @@ export function RoleEscrowDashboard({
                               {notification.message}
                             </p>
                             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                              {formatNotificationTimestamp(notification.timestamp)}
+                              {formatNotificationTimestamp(
+                                notification.timestamp,
+                              )}
                             </p>
                           </div>
                         </div>

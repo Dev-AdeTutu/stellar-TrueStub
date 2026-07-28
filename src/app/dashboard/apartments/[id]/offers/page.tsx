@@ -163,7 +163,7 @@ export default function InterestedPeoplePage() {
                 <Bed className="h-4 w-4 text-orange-500" />
                 {apartment.bedrooms} bd.
               </span>
-              {apartment.pet_friendly !== false && (
+              {(apartment as any).pet_friendly !== false && (
                 <span className="flex items-center gap-1">
                   <PawPrint className="h-4 w-4 text-orange-500" />
                   pet friendly
