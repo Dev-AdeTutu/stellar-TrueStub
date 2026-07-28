@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Download, Filter } from "lucide-react";
 import { exportTransactionsToCSV } from "@/lib/exportToCSV";
