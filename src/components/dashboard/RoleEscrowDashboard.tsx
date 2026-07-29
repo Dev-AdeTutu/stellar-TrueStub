@@ -203,65 +203,69 @@ export function RoleEscrowDashboard({
         const dateB = b.metadata?.checkInDate ? new Date(b.metadata.checkInDate).getTime() : 0;
         return dateA - dateB;
       });
+    } else {
+      result.sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
     }
 
     return result;
   }, [statusFilter, minAmount, maxAmount, sortBy, checkInFrom, checkInTo, checkOutFrom, checkOutTo, escrows]);
 
-   // Real-time updates using Trustless Work notifications
-   useEffect(() => {
-     if (isLoading) return;
+  // Real-time updates using Trustless Work notifications
+  useEffect(() => {
+    if (isLoading) return;
 
-     const checkUpdates = async () => {
-       // Prevent overlapping requests
-       if (isPollingRef.current) return;
-       isPollingRef.current = true;
+    const checkUpdates = async () => {
+      // Prevent overlapping requests
+      if (isPollingRef.current) return;
+      isPollingRef.current = true;
 
-       try {
-         if (isMountedRef.current) setIsPolling(true);
-         const pendingNotifications = await checkPendingNotifications();
-         const milestoneUpdates = await checkMilestoneNotifications();
+      try {
+        if (isMountedRef.current) setIsPolling(true);
+        const pendingNotifications = await checkPendingNotifications();
+        const milestoneUpdates = await checkMilestoneNotifications();
 
-         // Combine and deduplicate notifications
-         const allNotifications = [...pendingNotifications, ...milestoneUpdates];
-         const uniqueNotifications = allNotifications.filter(
-           (notif, index, self) =>
-             index === self.findIndex((n) => n.id === notif.id),
-         );
+        // Combine and deduplicate notifications
+        const allNotifications = [...pendingNotifications, ...milestoneUpdates];
+        const uniqueNotifications = allNotifications.filter(
+          (notif, index, self) =>
+            index === self.findIndex((n) => n.id === notif.id),
+        );
 
-         if (uniqueNotifications.length > 0 && isMountedRef.current) {
-           setNotifications((prev) => {
-             // Merge with existing notifications, avoiding duplicates
-             const existingIds = new Set(prev.map((n) => n.id));
-             const newNotifications = uniqueNotifications.filter(
-               (n) => !existingIds.has(n.id),
-             );
-             return [...prev, ...newNotifications];
-           });
-         }
-       } catch (error) {
-         console.error("Error checking for updates:", error);
-       } finally {
-         isPollingRef.current = false;
-         if (isMountedRef.current) {
-           setIsPolling(false);
-         }
-       }
-     };
+        if (uniqueNotifications.length > 0 && isMountedRef.current) {
+          setNotifications((prev) => {
+            // Merge with existing notifications, avoiding duplicates
+            const existingIds = new Set(prev.map((n) => n.id));
+            const newNotifications = uniqueNotifications.filter(
+              (n) => !existingIds.has(n.id),
+            );
+            return [...prev, ...newNotifications];
+          });
+        }
+      } catch (error) {
+        console.error("Error checking for updates:", error);
+      } finally {
+        isPollingRef.current = false;
+        if (isMountedRef.current) {
+          setIsPolling(false);
+        }
+      }
+    };
 
-     // Initial check
-     checkUpdates();
+    // Initial check
+    checkUpdates();
 
-     // Poll every 15 seconds
-     const interval = setInterval(checkUpdates, 15000);
+    // Poll every 15 seconds
+    const interval = setInterval(checkUpdates, 15000);
 
-     // Cleanup function
-     return () => {
-       isMountedRef.current = false;
-       isPollingRef.current = false;
-       clearInterval(interval);
-     };
-   }, [isLoading]);
+    // Cleanup function
+    return () => {
+      isMountedRef.current = false;
+      isPollingRef.current = false;
+      clearInterval(interval);
+    };
+  }, [isLoading]);
 
   if (isLoading) {
     return (
