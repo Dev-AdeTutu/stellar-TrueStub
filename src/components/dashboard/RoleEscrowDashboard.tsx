@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight, SlidersHorizontal } from "lucide-react";
+import { ChevronRight, SlidersHorizontal, Download } from "lucide-react";
 import { useEffect, useRef, useState, useMemo } from "react";
 import {
   Popover,
@@ -9,9 +9,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { ChevronRight } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { Download, Filter } from "lucide-react";
 import { exportTransactionsToCSV } from "@/lib/exportToCSV";
 import type { TransactionRow } from "@/lib/exportToCSV";
 import { DashboardHeader } from "./DashboardHeader";
@@ -112,7 +109,6 @@ export function RoleEscrowDashboard({
   const [notifications, setNotifications] =
     useState<NotificationData[]>(initialNotifications);
   const [showAnalytics, setShowAnalytics] = useState(false);
-  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [isPolling, setIsPolling] = useState(false);
   const isMountedRef = useRef(true);
   const isPollingRef = useRef(false);
