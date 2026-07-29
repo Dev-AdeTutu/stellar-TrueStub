@@ -1,6 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { ChevronRight, SlidersHorizontal } from "lucide-react";
+import { useEffect, useRef, useState, useMemo } from "react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Download, Filter } from "lucide-react";
@@ -108,6 +116,101 @@ export function RoleEscrowDashboard({
   const [isPolling, setIsPolling] = useState(false);
   const isMountedRef = useRef(true);
   const isPollingRef = useRef(false);
+
+  // Filter state
+  const [statusFilter, setStatusFilter] = useState<string[]>([]);
+  const [minAmount, setMinAmount] = useState("");
+  const [maxAmount, setMaxAmount] = useState("");
+  const [sortBy, setSortBy] = useState("recent");
+  const [checkInFrom, setCheckInFrom] = useState("");
+  const [checkInTo, setCheckInTo] = useState("");
+  const [checkOutFrom, setCheckOutFrom] = useState("");
+  const [checkOutTo, setCheckOutTo] = useState("");
+
+  const STATUS_OPTIONS = [
+    "Completed",
+    "Check-In Approved",
+    "Check-out Approved",
+    "Cancelled",
+    "Pending",
+  ];
+
+  const STATUS_MAP: Record<string, string> = {
+    "Completed": "completed",
+    "Check-In Approved": "check_in_approved",
+    "Check-out Approved": "check_out_approved",
+    "Cancelled": "cancelled",
+    "Pending": "pending",
+  };
+
+  const SORT_OPTIONS = [
+    { label: "Most Recent", value: "recent" },
+    { label: "Amount: High to Low", value: "amount-high" },
+    { label: "Amount: Low to High", value: "amount-low" },
+    { label: "Check-in Date", value: "checkin" },
+  ];
+
+  const activeFilterCount =
+    statusFilter.length +
+    (minAmount ? 1 : 0) +
+    (maxAmount ? 1 : 0) +
+    (checkInFrom ? 1 : 0) +
+    (checkInTo ? 1 : 0) +
+    (checkOutFrom ? 1 : 0) +
+    (checkOutTo ? 1 : 0) +
+    (sortBy !== "recent" ? 1 : 0);
+
+  const filteredTransactions = useMemo(() => {
+    let result = [...escrows];
+
+    if (statusFilter.length > 0) {
+      const mappedStatuses = statusFilter.map((s) => STATUS_MAP[s]);
+      result = result.filter((t) => mappedStatuses.includes(t.status));
+    }
+    if (minAmount) {
+      result = result.filter((t) => t.amount >= Number(minAmount));
+    }
+    if (maxAmount) {
+      result = result.filter((t) => t.amount <= Number(maxAmount));
+    }
+    if (checkInFrom) {
+      result = result.filter(
+        (t) => t.metadata?.checkInDate && new Date(t.metadata.checkInDate) >= new Date(checkInFrom)
+      );
+    }
+    if (checkInTo) {
+      result = result.filter(
+        (t) => t.metadata?.checkInDate && new Date(t.metadata.checkInDate) <= new Date(checkInTo)
+      );
+    }
+    if (checkOutFrom) {
+      result = result.filter(
+        (t) => t.metadata?.checkOutDate && new Date(t.metadata.checkOutDate) >= new Date(checkOutFrom)
+      );
+    }
+    if (checkOutTo) {
+      result = result.filter(
+        (t) => t.metadata?.checkOutDate && new Date(t.metadata.checkOutDate) <= new Date(checkOutTo)
+      );
+    }
+    if (sortBy === "amount-high") {
+      result.sort((a, b) => b.amount - a.amount);
+    } else if (sortBy === "amount-low") {
+      result.sort((a, b) => a.amount - b.amount);
+    } else if (sortBy === "checkin") {
+      result.sort((a, b) => {
+        const dateA = a.metadata?.checkInDate ? new Date(a.metadata.checkInDate).getTime() : 0;
+        const dateB = b.metadata?.checkInDate ? new Date(b.metadata.checkInDate).getTime() : 0;
+        return dateA - dateB;
+      });
+    } else {
+      result.sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+    }
+
+    return result;
+  }, [statusFilter, minAmount, maxAmount, sortBy, checkInFrom, checkInTo, checkOutFrom, checkOutTo, escrows]);
 
   // Real-time updates using Trustless Work notifications
   useEffect(() => {
@@ -532,106 +635,225 @@ export function RoleEscrowDashboard({
         </div>
 
         {/* Transactions Table */}
-        {(() => {
-          const filteredEscrows = escrows.filter((escrow) => {
-            if (statusFilter !== "all" && escrow.status !== statusFilter) {
-              return false;
-            }
-            return true;
-          });
-
-          const filteredTransactions: TransactionRow[] = filteredEscrows.map(
-            (e) => ({
-              bookingId: e.metadata?.bookingId || e.id,
-              hotel: e.metadata?.hotelName || "N/A",
-              checkIn: e.metadata?.checkInDate || "N/A",
-              checkOut: e.metadata?.checkOutDate || "N/A",
-              amount: e.amount,
-              status: e.status,
-            }),
-          );
-
-          return (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700">
-              <div className="p-4 border-b border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <h2 className="text-lg font-semibold flex items-center">
-                  <svg
-                    className="w-5 h-5 mr-2 text-indigo-600 dark:text-indigo-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-                    />
-                  </svg>
-                  Recent Transactions
-                </h2>
-                <div className="flex items-center gap-3 flex-wrap">
-                  <div className="flex items-center gap-2">
-                    <Filter className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                    <select
-                      value={statusFilter}
-                      onChange={(e) => setStatusFilter(e.target.value)}
-                      className="text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-1.5 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
-                      aria-label="Filter by status"
-                    >
-                      <option value="all">All Statuses</option>
-                      <option value="pending">Pending</option>
-                      <option value="funded">Funded</option>
-                      <option value="check_in_approved">
-                        Check-in Approved
-                      </option>
-                      <option value="check_out_approved">
-                        Check-out Approved
-                      </option>
-                      <option value="completed">Completed</option>
-                      <option value="cancelled">Cancelled</option>
-                    </select>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700">
+          <div className="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+            <h2 className="text-lg font-semibold flex items-center">
+              <svg
+                className="w-5 h-5 mr-2 text-indigo-600 dark:text-indigo-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                />
+              </svg>
+              Recent Transactions
+            </h2>
+            <div className="flex items-center gap-3">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button className="flex items-center gap-2 text-sm
+                                     border border-slate-600 rounded-lg
+                                     px-3 py-1.5 hover:bg-slate-700
+                                     transition-colors text-gray-700 dark:text-gray-300
+                                     relative">
+                    <SlidersHorizontal className="h-4 w-4" />
+                    <span>Filter</span>
+                    {activeFilterCount > 0 && (
+                      <span className="absolute -top-1.5 -right-1.5
+                                       bg-orange-500 text-white text-[10px]
+                                       font-bold rounded-full w-4 h-4
+                                       flex items-center justify-center">
+                        {activeFilterCount}
+                      </span>
+                    )}
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent
+                  align="end"
+                  className="w-80 p-4 space-y-4
+                             bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shadow-md"
+                >
+                  {/* Sort by */}
+                  <div className="space-y-2">
+                    <p className="text-xs font-semibold uppercase tracking-wide
+                                  text-gray-500 dark:text-gray-400">
+                      Sort by
+                    </p>
+                    <div className="grid grid-cols-2 gap-1">
+                      {SORT_OPTIONS.map((opt) => (
+                        <button
+                          key={opt.value}
+                          onClick={() => setSortBy(opt.value)}
+                          className={cn(
+                            "text-xs px-2 py-1.5 rounded-lg text-left transition-colors",
+                            sortBy === opt.value
+                              ? "bg-orange-500 text-white"
+                              : "bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600"
+                          )}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
-                  <button
-                    onClick={() =>
-                      exportTransactionsToCSV(
-                        filteredTransactions,
-                        `safetrust-transactions-${new Date().toISOString().split("T")[0]}.csv`,
-                      )
-                    }
-                    className="flex items-center gap-2 text-sm border border-slate-600 rounded-lg px-3 py-1.5 hover:bg-slate-700 transition-colors text-gray-700 dark:text-gray-300 dark:hover:bg-slate-700"
-                  >
-                    <Download className="h-4 w-4" />
-                    Export CSV
-                  </button>
+                  <hr className="border-gray-200 dark:border-slate-700" />
 
-                  <button className="text-sm font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 flex items-center">
-                    View All
-                    <svg
-                      className="w-4 h-4 ml-1"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
+                  {/* Status filter */}
+                  <div className="space-y-2">
+                    <p className="text-xs font-semibold uppercase tracking-wide
+                                  text-gray-500 dark:text-gray-400">
+                      Status
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {STATUS_OPTIONS.map((status) => (
+                        <button
+                          key={status}
+                          onClick={() =>
+                            setStatusFilter((prev) =>
+                              prev.includes(status)
+                                ? prev.filter((s) => s !== status)
+                                : [...prev, status]
+                            )
+                          }
+                          className={cn(
+                            "text-xs px-2.5 py-1 rounded-full border transition-colors",
+                            statusFilter.includes(status)
+                              ? "bg-orange-500 text-white border-orange-500"
+                              : "border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 hover:border-gray-400 dark:hover:border-slate-500"
+                          )}
+                        >
+                          {status}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <hr className="border-gray-200 dark:border-slate-700" />
+
+                  {/* Amount range */}
+                  <div className="space-y-2">
+                    <p className="text-xs font-semibold uppercase tracking-wide
+                                  text-gray-500 dark:text-gray-400">
+                      Amount Range
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="number"
+                        placeholder="Min $"
+                        value={minAmount}
+                        onChange={(e) => setMinAmount(e.target.value)}
+                        className="w-full rounded-lg border border-gray-300 dark:border-slate-600
+                                   bg-white dark:bg-slate-900 px-3 py-1.5 text-sm text-gray-900 dark:text-gray-300
+                                   placeholder:text-gray-400 dark:placeholder:text-gray-500"
                       />
-                    </svg>
+                      <span className="text-gray-500 shrink-0">—</span>
+                      <input
+                        type="number"
+                        placeholder="Max $"
+                        value={maxAmount}
+                        onChange={(e) => setMaxAmount(e.target.value)}
+                        className="w-full rounded-lg border border-gray-300 dark:border-slate-600
+                                   bg-white dark:bg-slate-900 px-3 py-1.5 text-sm text-gray-900 dark:text-gray-300
+                                   placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                      />
+                    </div>
+                  </div>
+
+                  <hr className="border-gray-200 dark:border-slate-700" />
+
+                  {/* Date range */}
+                  <div className="space-y-2">
+                    <p className="text-xs font-semibold uppercase tracking-wide
+                                  text-gray-500 dark:text-gray-400">
+                      Check-in Date Range
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="date"
+                        value={checkInFrom}
+                        onChange={(e) => setCheckInFrom(e.target.value)}
+                        className="w-full rounded-lg border border-gray-300 dark:border-slate-600
+                                   bg-white dark:bg-slate-900 px-3 py-1.5 text-sm text-gray-900 dark:text-gray-300"
+                      />
+                      <span className="text-gray-500 shrink-0">to</span>
+                      <input
+                        type="date"
+                        value={checkInTo}
+                        onChange={(e) => setCheckInTo(e.target.value)}
+                        className="w-full rounded-lg border border-gray-300 dark:border-slate-600
+                                   bg-white dark:bg-slate-900 px-3 py-1.5 text-sm text-gray-900 dark:text-gray-300"
+                      />
+                    </div>
+                  </div>
+
+                  <hr className="border-gray-200 dark:border-slate-700" />
+
+                  {/* Check-out date range */}
+                  <div className="space-y-2">
+                    <p className="text-xs font-semibold uppercase tracking-wide
+                                  text-gray-500 dark:text-gray-400">
+                      Check-out Date Range
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="date"
+                        value={checkOutFrom}
+                        onChange={(e) => setCheckOutFrom(e.target.value)}
+                        className="w-full rounded-lg border border-gray-300 dark:border-slate-600
+                                   bg-white dark:bg-slate-900 px-3 py-1.5 text-sm text-gray-900 dark:text-gray-300"
+                      />
+                      <span className="text-gray-500 shrink-0">to</span>
+                      <input
+                        type="date"
+                        value={checkOutTo}
+                        onChange={(e) => setCheckOutTo(e.target.value)}
+                        className="w-full rounded-lg border border-gray-300 dark:border-slate-600
+                                   bg-white dark:bg-slate-900 px-3 py-1.5 text-sm text-gray-900 dark:text-gray-300"
+                      />
+                    </div>
+                  </div>
+
+                  <hr className="border-gray-200 dark:border-slate-700" />
+
+                  {/* Reset */}
+                  <button
+                    onClick={() => {
+                      setStatusFilter([]);
+                      setMinAmount("");
+                      setMaxAmount("");
+                      setSortBy("recent");
+                      setCheckInFrom("");
+                      setCheckInTo("");
+                      setCheckOutFrom("");
+                      setCheckOutTo("");
+                    }}
+                    className="w-full text-sm text-center text-orange-500
+                               hover:text-orange-400 font-medium"
+                  >
+                    Reset all filters
                   </button>
-                </div>
-              </div>
-              <div className="overflow-x-auto">
-                <EscrowTable escrows={filteredEscrows} userRole={userRole} />
-              </div>
+                </PopoverContent>
+              </Popover>
+              <Link
+                href="/dashboard/escrow"
+                className="text-sm font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 flex items-center gap-1 transition-colors"
+              >
+                View All
+                <ChevronRight className="h-4 w-4" />
+              </Link>
             </div>
-          );
-        })()}
+          </div>
+          <div className="overflow-x-auto">
+            <EscrowTable escrows={filteredTransactions} userRole={userRole} />
+          </div>
+        </div>
       </div>
     </div>
   );
