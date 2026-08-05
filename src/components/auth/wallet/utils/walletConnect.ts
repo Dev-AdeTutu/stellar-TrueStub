@@ -23,16 +23,16 @@ export const initializeWalletConnect = async () => {
         },
       },
       metadata: {
-        name: "SafeTrust",
-        description: "SafeTrust - Secure P2P Transactions",
+        name: "TrueStub",
+        description: "TrueStub - Secure P2P Transactions",
         url:
           typeof window !== "undefined"
             ? window.location.origin
-            : "https://safetrust.com",
+            : "https://truestub.com",
         icons: [
           typeof window !== "undefined"
             ? `${window.location.origin}/img/logo.png`
-            : "https://safetrust.com/logo.png",
+            : "https://truestub.com/logo.png",
         ],
       },
     });

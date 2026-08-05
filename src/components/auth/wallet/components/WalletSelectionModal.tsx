@@ -286,7 +286,7 @@ export const WalletSelectionModal: React.FC<WalletSelectionModalProps> = ({
                 /* Wallet List */
                 <div className="space-y-3">
                   <p className="text-sm text-gray-600">
-                    Choose a wallet to connect to SafeTrust
+                    Choose a wallet to connect to TrueStub
                   </p>
                   
                   {wallets.map((wallet) => (
