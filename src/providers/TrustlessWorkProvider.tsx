@@ -1,4 +1,4 @@
-// frontend-SafeTrust/src/providers/TrustlessWorkProvider.tsx
+// frontend-TrueStub/src/providers/TrustlessWorkProvider.tsx
 
 "use client";
 
@@ -7,7 +7,7 @@ import { ReactNode } from "react";
 /**
  * Skeleton-mode stub.
  *
- * In dApp-SafeTrust this wraps the app with the real
+ * In dApp-TrueStub this wraps the app with the real
  * @trustless-work/escrow SDK provider. Here it's a
  * pass-through so layout.tsx compiles without pulling
  * in wallet/escrow dependencies.
