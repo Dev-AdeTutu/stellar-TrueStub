@@ -11,7 +11,7 @@ export const setupCachePersistence = async (cache: InMemoryCache) => {
             maxSize: 1048576 * 5, // 5MB cache limit
             debug: process.env.NODE_ENV === 'development',
             trigger: 'write', // Persist on every write
-            key: 'safetrust-apollo-cache',
+            key: 'truestub-apollo-cache',
         });
 
         console.log('✅ Apollo cache persistence initialized');
@@ -24,7 +24,7 @@ export const clearPersistedCache = async () => {
     if (typeof window === 'undefined') return;
 
     try {
-        await window.localStorage.removeItem('safetrust-apollo-cache');
+        await window.localStorage.removeItem('truestub-apollo-cache');
         console.log('🗑️ Persisted cache cleared');
     } catch (error) {
         console.error('Failed to clear persisted cache:', error);

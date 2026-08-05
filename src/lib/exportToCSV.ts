@@ -9,7 +9,7 @@ export interface TransactionRow {
 
 export function exportTransactionsToCSV(
   transactions: TransactionRow[],
-  filename = "safetrust-transactions.csv",
+  filename = "truestub-transactions.csv",
 ): void {
   const headers = [
     "Booking ID",

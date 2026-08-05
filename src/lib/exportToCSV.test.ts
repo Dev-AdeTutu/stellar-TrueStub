@@ -72,6 +72,6 @@ describe("exportTransactionsToCSV", () => {
 
     exportTransactionsToCSV(mockTransactions);
 
-    expect(createdLink?.download).toBe("safetrust-transactions.csv");
+    expect(createdLink?.download).toBe("truestub-transactions.csv");
   });
 });
