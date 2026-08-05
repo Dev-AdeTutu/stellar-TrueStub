@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 type Theme = 'light' | 'dark';
 
-const STORAGE_KEY = 'safetrust-theme';
+const STORAGE_KEY = 'truestub-theme';
 
 const isTheme = (value: string | null): value is Theme =>
   value === 'light' || value === 'dark';

@@ -1,4 +1,4 @@
-// frontend-SafeTrust/src/core/store/data/index.ts
+// frontend-TrueStub/src/core/store/data/index.ts
 
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";

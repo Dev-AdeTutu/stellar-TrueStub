@@ -18,7 +18,7 @@ import { trustlineOptions } from '@/components/tw-blocks/wallet-kit/trustlines';
 
 // Constants
 const STROOPS_MULTIPLIER = 10000000; // 1 XLM = 10,000,000 stroops
-const PLATFORM_NAME = 'SafeTrust';
+const PLATFORM_NAME = 'TrueStub';
 const VERSION = '1.0.0';
 
 // Milestone split percentages
@@ -190,7 +190,7 @@ export function useBookingEscrow({
       roles: {
         approver: guestWallet || '', // Guest approves the release
         serviceProvider: hotelData.walletAddress, // Hotel receives funds
-        platformAddress: platformWallet, // SafeTrust platform
+        platformAddress: platformWallet, // TrueStub platform
         releaseSigner: platformWallet, // Platform controls release
         disputeResolver: disputeResolver, // Handles disputes
         receiver: hotelData.walletAddress, // Hotel receives payment
