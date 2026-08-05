@@ -85,7 +85,7 @@ export default function NewHotelPage() {
           New Hotel
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Register a new hotel property on SafeTrust
+          Register a new hotel property on TrueStub
         </p>
       </div>
 

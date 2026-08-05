@@ -36,7 +36,7 @@ export default function ShareButton({ onShare, className }: ShareButtonProps) {
       try {
         await navigator.share({
           title: document.title,
-          text: "Check out this amazing room on SafeTrust!",
+          text: "Check out this listing on TrueStub!",
           url: window.location.href,
         });
         return;

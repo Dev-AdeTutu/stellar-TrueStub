@@ -1,7 +1,7 @@
 import { RoleEscrowDashboardPage } from "./RoleEscrowDashboardPage";
 
 export const metadata = {
-  title: "Escrow Dashboard | SafeTrust",
+  title: "Escrow Dashboard | TrueStub",
   description: "Monitor and manage your escrows across all roles",
 };
 

@@ -12,8 +12,9 @@ import { ThemeProvider } from "next-themes";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "SafeTrust",
-  description: "Decentralized P2P Escrow on Stellar Blockchain",
+  title: "TrueStub",
+  description:
+    "Trustless escrow for peer-to-peer ticket resale, built on the Stellar blockchain.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

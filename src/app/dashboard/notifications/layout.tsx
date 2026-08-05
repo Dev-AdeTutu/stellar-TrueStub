@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Notifications | SafeTrust",
+  title: "Notifications | TrueStub",
 };
 
 export default function NotificationsLayout({
