@@ -75,11 +75,11 @@ export default function RegisterPage() {
 
       const token = await credential.user.getIdToken();
 
-      // Step 2 — sync user to backend-SafeTrust (non-blocking)
-      // This call is optional — frontend-SafeTrust runs standalone without
-      // backend-SafeTrust. If the backend is not running or BACKEND_URL is
+      // Step 2 — sync user to backend-TrueStub (non-blocking)
+      // This call is optional — frontend-TrueStub runs standalone without
+      // backend-TrueStub. If the backend is not running or BACKEND_URL is
       // not set, the sync is skipped silently and registration still completes.
-      // When backend-SafeTrust IS running, the sync writes the user to PostgreSQL.
+      // When backend-TrueStub IS running, the sync writes the user to PostgreSQL.
       try {
         await fetch("/api/auth/sync-user", {
           method: "POST",
@@ -97,7 +97,7 @@ export default function RegisterPage() {
         });
       } catch {
         // Backend not available — skip sync, continue registration normally
-        console.warn("User sync skipped — backend-SafeTrust not available");
+        console.warn("User sync skipped — backend-TrueStub not available");
       }
 
       // Step 3 — set cookie and store token
@@ -141,8 +141,8 @@ export default function RegisterPage() {
         <div className="w-full max-w-sm space-y-6">
           <div className="flex items-center justify-between w-full mb-2">
             <div className="flex items-center space-x-2">
-              <Image src="/img/logo.png" alt="SafeTrust" width={32} height={32} />
-              <h1 className="text-2xl font-bold">SafeTrust</h1>
+              <Image src="/img/logo.png" alt="TrueStub" width={32} height={32} />
+              <h1 className="text-2xl font-bold">TrueStub</h1>
             </div>
             <ThemeToggle />
           </div>

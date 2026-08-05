@@ -54,12 +54,12 @@ export default function NewPassword() {
           <div className="flex items-center space-x-2">
             <Image
               src="/img/logo.png"
-              alt="SafeTrust"
+              alt="TrueStub"
               width={32}
               height={32}
               style={{ width: "auto", height: "auto" }}
             />
-            <h1 className="text-2xl font-bold">SafeTrust</h1>
+            <h1 className="text-2xl font-bold">TrueStub</h1>
           </div>
 
           <div className="space-y-2 text-center">

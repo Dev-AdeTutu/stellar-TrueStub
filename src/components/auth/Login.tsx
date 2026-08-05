@@ -97,8 +97,8 @@ export default function LoginPage() {
       <div className="flex w-full flex-col items-center justify-center px-4 md:w-1/2">
         <div className="w-full max-w-sm space-y-6">
           <div className="flex items-center space-x-2">
-            <Image src="/img/logo.png" alt="SafeTrust" width={32} height={32} />
-            <h1 className="text-2xl font-bold">SafeTrust</h1>
+            <Image src="/img/logo.png" alt="TrueStub" width={32} height={32} />
+            <h1 className="text-2xl font-bold">TrueStub</h1>
           </div>
 
           <form className="space-y-4" onSubmit={handleLogin}>
