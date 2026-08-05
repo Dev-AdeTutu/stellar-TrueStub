@@ -11,7 +11,7 @@
 
 ```bash
 git clone <your-repo-url>
-cd safetrust-apollo-client
+cd truestub-apollo-client
 npm install
 cp .env.local.example .env.local
 ```
@@ -110,7 +110,7 @@ Test:
 
 ```env
 NEXT_PUBLIC_HASURA_GRAPHQL_URL=http://localhost:8080/v1/graphql
-NEXT_PUBLIC_HASURA_ADMIN_SECRET=safetrust_admin_secret_2024
+NEXT_PUBLIC_HASURA_ADMIN_SECRET=truestub_admin_secret_2024
 NEXT_PUBLIC_HASURA_WS_URL=ws://localhost:8080/v1/graphql
 ```
 
