@@ -126,7 +126,7 @@ export function useInitializeEscrow() {
             signerAddress = parsed?.state?.address || parsed?.address || "";
           }
         } catch (e) {
-          console.warn("Failed to get wallet from SafeTrust store:", e);
+          console.warn("Failed to get wallet from TrueStub store:", e);
         }
       }
 
