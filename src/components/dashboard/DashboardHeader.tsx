@@ -132,7 +132,7 @@ export function DashboardHeader({
           <div className="text-sm">
             <div className="font-medium">{roleLabels[userRole]}</div>
             <div className="text-xs text-muted-foreground">
-              {userRole}@safetrust.com
+              {userRole}@truestub.com
             </div>
           </div>
         </div>
