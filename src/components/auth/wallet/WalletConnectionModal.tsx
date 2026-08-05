@@ -181,7 +181,7 @@ export default function WalletConnectionModal({
 
         <div className="mt-4 text-center">
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            SafeTrust supports multiple blockchain networks for secure P2P
+            TrueStub supports multiple blockchain networks for secure P2P
             transactions
           </p>
         </div>

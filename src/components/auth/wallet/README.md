@@ -1,6 +1,6 @@
-# Multi-Wallet Integration for SafeTrust
+# Multi-Wallet Integration for TrueStub
 
-This directory contains a comprehensive multi-wallet integration system for the SafeTrust frontend, supporting multiple blockchain networks and wallet types.
+This directory contains a comprehensive multi-wallet integration system for the TrueStub frontend, supporting multiple blockchain networks and wallet types.
 
 ## Features
 
@@ -108,7 +108,7 @@ export const kit: StellarWalletsKit = new StellarWalletsKit({
   modalParams: {
     modalTitle: "Connect to your favorite wallet",
     theme: {
-      // Custom theme matching SafeTrust design
+      // Custom theme matching TrueStub design
     },
   },
 });
