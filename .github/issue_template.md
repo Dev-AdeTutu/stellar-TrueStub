@@ -50,5 +50,5 @@ Paste any relevant logs, error messages, or console output here
 
 The Pull request needs to have the format mentioned below in the Git Guideline
 
-- [Contributing Guide ](https://github.com/safetrustcr/Frontend/issues/34)
-- [Git Guidelines](https://github.com/safetrustcr/Frontend/issues/35)
+- [Contributing Guide](../docs/CONTRIBUTORS_GUIDELINE.md)
+- [Git Guidelines](../docs/GIT_GUIDELINE.md)

@@ -1,4 +1,4 @@
-# Pull Request for SafeTrust - Close Issue
+# Pull Request for TrueStub - Close Issue
 
 ❗ **Pull Request Information**
 
@@ -39,7 +39,7 @@ This pull request will **close # [Issue Number]** upon merging.
 
 The Pull request needs to have the format mentioned below in the Git Guideline
 
-- [Contributing Guide ](https://github.com/safetrustcr/Frontend/issues/34)
-- [Git Guidelines](https://github.com/safetrustcr/Frontend/issues/35)
+- [Contributing Guide](../docs/CONTRIBUTORS_GUIDELINE.md)
+- [Git Guidelines](../docs/GIT_GUIDELINE.md)
 
 🎉 Thank you for reviewing this PR! 🎉
