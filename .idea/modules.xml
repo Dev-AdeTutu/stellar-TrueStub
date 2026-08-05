@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/frontend-SafeTrust.iml" filepath="$PROJECT_DIR$/.idea/frontend-SafeTrust.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/frontend-TrueStub.iml" filepath="$PROJECT_DIR$/.idea/frontend-TrueStub.iml" />
     </modules>
   </component>
 </project>
