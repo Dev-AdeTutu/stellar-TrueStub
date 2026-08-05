@@ -34,7 +34,7 @@ export function getStubEscrow(escrowId: string): StubEscrowDetail {
     discount: "$0",
     total: "$4,000",
     terms:
-      "Payment is processed via SafeTrust escrow. Deposit is released per rental agreement after property inspection.",
+      "Payment is processed via TrueStub escrow. Deposit is released per rental agreement after property inspection.",
     tenant: {
       name: "John Smith",
       wallet: "MJE...XN32",
