@@ -49,7 +49,7 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
         </div>
         <CardTitle className="text-xl text-green-600">Booking Confirmed!</CardTitle>
         <p className="text-sm text-muted-foreground">
-          Your reservation has been secured with SafeTrust escrow
+          Your reservation has been secured with TrueStub escrow
         </p>
       </CardHeader>
       

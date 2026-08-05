@@ -322,7 +322,7 @@ export function EscrowConfirmation({
           <li>• Keep your escrow contract ID for your records</li>
           <li>• You can view your escrow status anytime in your dashboard</li>
           <li>• If any issues arise, contact support with your contract ID</li>
-          <li>• Disputes can be raised through the SafeTrust platform</li>
+          <li>• Disputes can be raised through the TrueStub platform</li>
         </ul>
       </div>
 

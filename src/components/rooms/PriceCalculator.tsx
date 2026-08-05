@@ -87,7 +87,7 @@ const PriceCalculator: React.FC<PriceCalculatorProps> = ({
         </div>
 
         <div className="flex justify-between text-sm">
-          <span>SafeTrust Fee ({(platformFee * 100).toFixed(0)}%)</span>
+          <span>TrueStub Fee ({(platformFee * 100).toFixed(0)}%)</span>
           <span>${priceBreakdown.platformFee.toFixed(2)}</span>
         </div>
 
