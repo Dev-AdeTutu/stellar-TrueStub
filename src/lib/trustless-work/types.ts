@@ -61,7 +61,7 @@ import type { SingleReleaseEscrow, MultiReleaseEscrow, SingleReleaseMilestone, M
 
 /**
  * =============================================================================
- * DOMAIN-SPECIFIC TYPES FOR SAFETRUST APPLICATION (Hotel Booking)
+ * DOMAIN-SPECIFIC TYPES FOR TRUESTUB APPLICATION (Hotel Booking)
  * =============================================================================
  * These interfaces provide a simplified, application-specific view of escrow data
  * tailored for hotel booking scenarios. Use these for UI components and business logic.

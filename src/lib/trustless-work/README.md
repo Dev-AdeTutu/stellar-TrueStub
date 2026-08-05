@@ -1,6 +1,6 @@
 # TrustlessWork SDK Integration
 
-This directory contains the TrustlessWork SDK integration for the SafeTrust application. It provides a clean, well-organized interface for working with the TrustlessWork escrow system on the Stellar blockchain.
+This directory contains the TrustlessWork SDK integration for the TrueStub application. It provides a clean, well-organized interface for working with the TrustlessWork escrow system on the Stellar blockchain.
 
 ## 📁 Directory Structure
 
@@ -383,4 +383,4 @@ If hooks are not working:
 
 ## 📝 License
 
-This integration follows the same license as the SafeTrust project.
+This integration follows the same license as the TrueStub project.
