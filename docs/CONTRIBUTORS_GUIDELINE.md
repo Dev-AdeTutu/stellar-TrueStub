@@ -1,4 +1,4 @@
-# 🌟 Contributing Guide | SafeTrust
+# 🌟 Contributing Guide | TrueStub
 
 We’re excited you’re interested in contributing! Please follow these steps to ensure a smooth and efficient collaboration process.
 
