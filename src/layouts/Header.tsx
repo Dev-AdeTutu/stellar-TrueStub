@@ -36,12 +36,12 @@ const Header: React.FC = () => {
           <Link href="/" className="flex items-center">
             <img
               src={theme === "dark" ? "/img/logolight.png" : "/img/logo.png"}
-              alt="SafeTrust Logo"
+              alt="TrueStub Logo"
               className="h-12"
             />
           </Link>
           <span className="ml-2 text-3xl font-bold text-black dark:text-white">
-            SafeTrust
+            TrueStub
           </span>
         </div>
 

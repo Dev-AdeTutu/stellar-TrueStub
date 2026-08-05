@@ -31,14 +31,14 @@ export const Header = ({ onMenuClick }: HeaderProps) => {
               <Link href="/" className="flex min-w-0 shrink-0 items-center gap-2">
                 <Image
                   src="/img/logo.png"
-                  alt="SafeTrust Logo"
+                  alt="TrueStub Logo"
                   width={40}
                   height={40}
                   priority
                   className="h-9 w-9 shrink-0 object-contain"
                 />
                 <span className="hidden truncate text-xl font-semibold text-gray-800 dark:text-white sm:block">
-                  SafeTrust
+                  TrueStub
                 </span>
               </Link>
             </div>

@@ -19,9 +19,9 @@ export default function HotelHeader({ showHostSwitch = false }: HotelHeaderProps
     <header className="border-b border-[#e8e1da] bg-white dark:border-slate-700 dark:bg-slate-900">
       <div className="mx-auto flex max-w-[1180px] items-center gap-4 px-5 py-5 lg:px-7">
         <Link href="/" className="flex items-center gap-3">
-          <Image src="/img/logo.png" alt="SafeTrust" width={36} height={36} />
+          <Image src="/img/logo.png" alt="TrueStub" width={36} height={36} />
           <span className="text-[24px] font-semibold tracking-[-0.03em] text-gray-900 dark:text-white">
-            SafeTrust
+            TrueStub
           </span>
         </Link>
 
