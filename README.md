@@ -1,37 +1,37 @@
-# 🌟 SafeTrust 🌟
+# 🎟️ TrueStub 🎟️
 
-**SafeTrust** is a decentralized P2P escrow platform targeting the hospitality and tourism sector. Powered by the Stellar blockchain via the TrustlessWork API, it replaces traditional deposit systems for hotels, vacation rentals, and booking platforms with trustless smart contracts that hold funds on-chain, release payments automatically on checkout confirmation, and handle disputes through transparent on-chain arbitration giving both guests and hosts a secure, verifiable alternative to legacy payment intermediaries. 🌐✨
+**TrueStub** is a decentralized P2P escrow platform for secondary-market ticket sales. Powered by the Stellar blockchain via the TrustlessWork API, it replaces "just send the money and hope" ticket resale with trustless smart contracts that hold the buyer's funds on-chain, release them to the seller automatically once transfer of a verified ticket is confirmed, and route any disagreement through transparent on-chain arbitration — giving both buyers and sellers a secure, verifiable alternative to screenshotting a QR code and wiring money to a stranger. 🌐✨
 
 ---
-## 🚀 **Why Choose SafeTrust?**
+## 🚀 **Why Choose TrueStub?**
 
-🔐 **Trustless Technology**: Secure and block deposits without intermediaries.
-💾 **Blockchain-Powered Transparency**: Immutable, auditable, and verifiable transactions.
-💱 **Crypto-Payment Support**: Manage cryptocurrency payments safely and efficiently.
-✅ **Automated Refunds**: Streamlined processes ensure refunds and payment releases happen automatically.
+🔐 **Trustless Technology**: Buyer funds are locked on-chain — no seller gets paid before the ticket is actually transferred.
+💾 **Blockchain-Powered Transparency**: Every escrow, transfer confirmation, and release is immutable, auditable, and verifiable.
+💱 **Crypto-Payment Support**: Manage cryptocurrency payments for ticket purchases safely and efficiently.
+✅ **Automated Refunds**: If a transfer never completes, funds return to the buyer automatically — no chasing a scalper for a refund.
 
 ---
 
 ## 🌟 **Key Features**
 
-🛠️ **Trustless Escrow**: Funds are securely held in blockchain-based escrow accounts until all terms are met.
+🛠️ **Trustless Escrow**: Funds are securely held in blockchain-based escrow accounts until transfer terms are met.
 
 🔎 **Blockchain Transparency**: Every transaction is logged on the blockchain for full visibility and accountability. 📜
 
-💰 **Crypto Payments**: Supports irreversible and secure cryptocurrency payments while reducing risks of fraud or disputes.
+💰 **Crypto Payments**: Supports irreversible and secure cryptocurrency payments while reducing risks of fraud, no-show sellers, or duplicate-sold tickets.
 
-🔗 **Trustline Process**: Verified trustlines between parties add an extra layer of transaction security. 🔒
+🔗 **Trustline Process**: Verified trustlines between buyer and seller add an extra layer of transaction security. 🔒
 
-📤 **Automated Refund System**: Ensures funds are automatically released based on the terms of the agreement, with no manual intervention required.
+📤 **Automated Refund System**: Ensures funds are automatically released or returned based on the terms of the agreement, with no manual intervention required.
 
 ---
 
 ## ⚙️ **How It Works**
 
-1. **Create Escrow**: The renter creates a secure escrow account. 🏗️
-2. **Fund Escrow**: The deposit is funded by the renter. 💵
-3. **Rental Agreement**: Terms are agreed upon and stored on the blockchain. 📃
-4. **Completion or Cancellation**: Funds are released based on contract outcomes. 🎯
+1. **List a Ticket**: The seller creates a secure escrow account for the ticket they're reselling. 🎫
+2. **Fund Escrow**: The buyer funds the escrow with the agreed price. 💵
+3. **Transfer Agreement**: Transfer terms (event, seat, deadline) are agreed upon and stored on the blockchain. 📃
+4. **Completion or Cancellation**: Funds release to the seller once transfer is confirmed, or return to the buyer if it isn't. 🎯
 
 ---
 
@@ -44,7 +44,7 @@
 - Trustless Work API access ([docs here](https://docs.trustlesswork.com/trustless-work)) 📖
 - A Firebase project with **Email/Password** authentication enabled ([Firebase Console](https://console.firebase.google.com)) 🔥
 
-> 🧩 **This repo runs standalone.** `frontend-SafeTrust` does **not** require `backend-SafeTrust` to be running locally. It connects directly to a live Hasura GraphQL endpoint and to Firebase — both are remote services reachable over the network, not local processes you need to start. See [Architecture: Standalone vs. Monorepo](#-architecture-standalone-vs-monorepo) below for the full explanation.
+> 🧩 **This repo runs standalone.** `frontend-TrueStub` does **not** require a separate backend service to be running locally. It connects directly to a live Hasura GraphQL endpoint and to Firebase — both are remote services reachable over the network, not local processes you need to start. See [Architecture](#-architecture) below for the full explanation.
 
 ---
 
@@ -53,9 +53,8 @@
 **1️⃣ Fork and clone the repository**
 
 ```bash
-git clone https://github.com/<your_user>/frontend-SafeTrust
-cd frontend-SafeTrust
-git remote add upstream https://github.com/safetrustcr/frontend-SafeTrust
+git clone https://github.com/<your_user>/frontend-TrueStub
+cd frontend-TrueStub
 ```
 
 **2️⃣ Install dependencies**
@@ -88,7 +87,7 @@ npm run dev
  ✓ Ready in 4s
 ```
 
-This repo runs on **port 3000 by default**. You only need to override the port with `npm run dev -- --port 3001` if you are *also* running `landing-SafeTrust` locally at the same time — see [Port Conventions](#-port-conventions) below.
+This repo runs on **port 3000 by default**.
 
 ---
 
@@ -109,7 +108,7 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=<your messagingSenderId>
 NEXT_PUBLIC_FIREBASE_APP_ID=<your appId>
 ```
 
-> ℹ️ These are public, browser-safe values — Firebase ships them to the client by design, and the `NEXT_PUBLIC_` prefix is what makes Next.js expose them to the bundle. The real security boundary is **Firebase Security Rules**, not secrecy of these values. They are **not** the Firebase Admin SDK private key, which belongs only in `backend-SafeTrust` and must never appear here.
+> ℹ️ These are public, browser-safe values — Firebase ships them to the client by design, and the `NEXT_PUBLIC_` prefix is what makes Next.js expose them to the bundle. The real security boundary is **Firebase Security Rules**, not secrecy of these values. They are **not** the Firebase Admin SDK private key, which belongs only in a server-side backend and must never appear here.
 
 Make sure **Email/Password** sign-in is enabled in **Authentication → Sign-in method** for Register and Login to work. 📚 [Firebase Auth docs](https://firebase.google.com/docs/auth)
 
@@ -136,11 +135,11 @@ NEXT_PUBLIC_TRUSTLESS_NETWORK=testnet
 NEXT_PUBLIC_HASURA_GRAPHQL_URL=<your Hasura GraphQL endpoint>/v1/graphql
 ```
 
-This points to a **Hasura GraphQL endpoint** — typically the shared SafeTrust Hasura instance, reachable over the network. You do **not** need to clone, run, or Dockerize `backend-SafeTrust` to develop on this repo; just point this variable at a working Hasura URL and the frontend talks to it directly.
+This points to a **Hasura GraphQL endpoint**, reachable over the network. You do **not** need to run a local backend to develop on this repo; just point this variable at a working Hasura URL and the frontend talks to it directly.
 
-> 🔒 **`HASURA_GRAPHQL_ADMIN_SECRET` must never be set in this repository.** The frontend authenticates against Hasura via a **Firebase JWT**, not the admin secret. The admin secret grants unrestricted read/write access to the entire database and belongs **only** in `backend-SafeTrust`'s server-side environment — never in a `NEXT_PUBLIC_*` variable, never in `.env.local` here, and never committed anywhere. See `src/config/apollo.ts` for how the JWT-based auth header is attached to GraphQL requests.
+> 🔒 **`HASURA_GRAPHQL_ADMIN_SECRET` must never be set in this repository.** The frontend authenticates against Hasura via a **Firebase JWT**, not the admin secret. The admin secret grants unrestricted read/write access to the entire database and belongs **only** in a backend's server-side environment — never in a `NEXT_PUBLIC_*` variable, never in `.env.local` here, and never committed anywhere. See `src/config/apollo.ts` for how the JWT-based auth header is attached to GraphQL requests.
 >
-> If you ever see `NEXT_PUBLIC_HASURA_ADMIN_SECRET` or similar in a `.env` file in this repo, treat it as a security incident — remove it and rotate the secret in `backend-SafeTrust` immediately.
+> If you ever see `NEXT_PUBLIC_HASURA_ADMIN_SECRET` or similar in a `.env` file in this repo, treat it as a security incident — remove it and rotate the secret immediately.
 
 ---
 
@@ -162,44 +161,17 @@ NEXT_PUBLIC_TRUSTLESS_API_URL=https://api.trustlesswork.com
 NEXT_PUBLIC_TRUSTLESS_API_URL_DEV=https://dev.api.trustlesswork.com
 NEXT_PUBLIC_TRUSTLESS_NETWORK=testnet
 
-# Hasura GraphQL (a reachable endpoint — backend-SafeTrust does NOT need to run locally; NO admin secret here, ever)
+# Hasura GraphQL (a reachable endpoint; NO admin secret here, ever)
 NEXT_PUBLIC_HASURA_GRAPHQL_URL=https://your-hasura-instance.example.com/v1/graphql
 ```
 
 ---
 
-### **🧩 Architecture: Standalone vs. Monorepo**
+### **🧩 Architecture**
 
-SafeTrust ships as three separate repositories, but they can be run in two different ways depending on what you're working on:
+This repo (`frontend-TrueStub`) runs **standalone**: `npm run dev` here connects to a remote/shared Hasura GraphQL endpoint and Firebase — no local backend, no Docker required for UI work.
 
-| Setup | What runs | When to use it |
-|---|---|---|
-| **`frontend-SafeTrust` standalone** (this repo) | Only `npm run dev` here. Connects to a remote/shared Hasura GraphQL endpoint and Firebase. No local backend, no Docker. | UI work, component development, dashboard features — most contributor tasks |
-| **`dApp-SafeTrust` monorepo** | Both frontend **and** backend (Hasura, Postgres, webhook service) run together via the monorepo's own tooling | Full-stack work that touches schema, mutations, or webhook behavior |
-| **`backend-SafeTrust` standalone** | Only the backend (Hasura + Postgres + webhook via Docker Compose), run independently | Backend-only contributors who don't need the UI |
-
-**For this repo (`frontend-SafeTrust`), you only need:**
-
-1. The six Firebase env vars (section 1 above)
-2. The TrustlessWork API vars (section 2 above)
-3. A working `NEXT_PUBLIC_HASURA_GRAPHQL_URL` pointing at a reachable Hasura instance (section 3 above)
-4. `npm run dev`
-
-You do **not** need to clone or run `backend-SafeTrust` to work on this repo. If you want a fully local, isolated backend instead of the shared instance, you can still clone `backend-SafeTrust` separately and point `NEXT_PUBLIC_HASURA_GRAPHQL_URL` at `http://localhost:8080/v1/graphql` — but that's optional, not a requirement to get this repo running.
-
----
-
-### **🔢 Port Conventions**
-
-This only matters if you're running **multiple SafeTrust repos at the same time** on the same machine (for example, `frontend-SafeTrust` alongside `landing-SafeTrust`). If you're only running this repo, `npm run dev` on its default port (`3000`) is all you need.
-
-| Repo | Port | Start command |
-|---|---|---|
-| `landing-SafeTrust` | `3000` | `npm run dev` |
-| `frontend-SafeTrust` (this repo) | `3000` (default) — use `3001` only if `landing-SafeTrust` is also running | `npm run dev` or `npm run dev -- --port 3001` |
-| `backend-SafeTrust` (optional, local backend) | `4000` (webhook), `8080` (Hasura) | `docker compose up -d` |
-
-If you start this repo on the default port while `landing-SafeTrust` is already running on `3000`, your browser may silently load the landing page instead of the dApp — and any runtime errors you see will actually belong to the landing repo, not this one.
+If you later add a companion backend (Hasura + Postgres + webhook service, e.g. `backend-TrueStub`) or a marketing site (`landing-TrueStub`), point `NEXT_PUBLIC_HASURA_GRAPHQL_URL` at whichever instance you want this frontend talking to — shared, or your own local one at `http://localhost:8080/v1/graphql`.
 
 ---
 
@@ -233,12 +205,12 @@ npm run test:coverage # coverage report
 
 ---
 
-## 🎨 **Design Mockup**
+## 🙏 **Credits**
 
-[SafeTrust Figma](https://www.figma.com/design/CVg9hoim0f1FIlozIar7ZZ/SafeTrust?node-id=0-1&node-type=canvas&t=LCzPmGeJfVxCMWTT-0)
+TrueStub started as a personalized fork of [SafeTrust](https://github.com/safetrustcr/frontend-SafeTrust), a decentralized P2P escrow platform for the hospitality and tourism sector. All credit for the original architecture, escrow integration, and wallet tooling goes to the SafeTrust team — this fork repoints that same trustless-escrow foundation at a different problem: secondary-market ticket resale.
 
 ---
 
-🌟 **Join SafeTrust today and revolutionize the way you manage P2P transactions!** 🌟
+🌟 **Join TrueStub today and never wire money to a stranger for a ticket again!** 🌟
 
 ---
