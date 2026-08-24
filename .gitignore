@@ -1,9 +1,9 @@
-# GraphQL Codegen output
-src/graphql/generated/
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Workspace-specific ignores (Next.js build output, codegen, coverage, etc.)
+# live in apps/frontend/.gitignore.
 
-# dependencies
-/node_modules
+# dependencies (covers root + nested workspace node_modules)
+node_modules
 /.pnp
 .pnp.*
 .yarn/*
@@ -11,16 +11,6 @@ src/graphql/generated/
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
 
 # misc
 .DS_Store
@@ -35,9 +25,5 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# rust / soroban contracts build output
+**/target/
