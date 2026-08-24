@@ -71,6 +71,12 @@ yarn docker:down
 
 ---
 
+## 🤝 **Contributing & security**
+
+New contributor? Start with **[`CONTRIBUTING.md`](CONTRIBUTING.md)**.
+Found a security issue? See **[`SECURITY.md`](SECURITY.md)** — please don't
+open a public issue for vulnerabilities.
+
 ## 📚 **More docs**
 
 Repo-wide docs live in [`docs/`](docs/): [contributing guidelines](docs/CONTRIBUTORS_GUIDELINE.md), [git guidelines](docs/GIT_GUIDELINE.md), [CI/CD pipeline setup](docs/PIPELINE.md), and [project history](docs/PIVOT_NOTES.md). Workspace-specific docs live alongside each workspace (e.g. [`apps/frontend/docs/`](apps/frontend/docs/)).
