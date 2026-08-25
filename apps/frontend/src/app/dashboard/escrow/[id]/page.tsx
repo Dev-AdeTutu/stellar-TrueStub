@@ -9,7 +9,10 @@ import { MilestoneProgress } from "@/components/dashboard/milestone-progress";
 import { getStubEscrow } from "@/components/escrow/views/stubEscrow";
 import { formatEscrowAmount } from "@/lib/formatEscrowAmount";
 import { RatingReviewModal } from "@/components/ratings/RatingReviewModal";
+import { RaiseDisputeModal } from "@/components/dispute/RaiseDisputeModal";
+import { DisputeArbitrationCard } from "@/components/dispute/DisputeArbitrationCard";
 import type { Milestone } from "@/components/dashboard/RoleEscrowDashboard";
+
 
 const milestoneData: Milestone[] = [
   {
@@ -90,18 +93,36 @@ export default async function EscrowDetailPage({
                 </div>
               </div>
 
-              <div className="flex flex-col justify-between rounded-3xl border border-gray-100 bg-slate-50 p-5 dark:border-slate-700 dark:bg-slate-800">
-                <div>
-                  <p className="text-sm text-gray-400">Current Status</p>
-                  <EscrowStatusBadge status={escrow.status} />
+              <div className="flex flex-col justify-between rounded-3xl border border-gray-100 bg-slate-50 p-5 dark:border-slate-700 dark:bg-slate-800 space-y-4">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <p className="text-sm text-gray-400">Current Status</p>
+                    <EscrowStatusBadge status={escrow.status} />
+                  </div>
+                  <RaiseDisputeModal
+                    contractId={escrow.id}
+                    engagementId={escrow.invoiceNumber}
+                    userWallet={escrow.tenant?.wallet}
+                    userRole="buyer"
+                  />
                 </div>
-                <div className="mt-6">
+                <div>
                   <p className="text-sm text-gray-400">Booking subject</p>
                   <p className="text-sm text-gray-900 dark:text-white">{escrow.subject}</p>
                 </div>
               </div>
             </div>
           </div>
+
+          {/* If escrow is disputed or in arbitration */}
+          {escrow.status === "DISPUTED" && (
+            <DisputeArbitrationCard
+              contractId={escrow.id}
+              engagementId={escrow.invoiceNumber}
+              arbitratorAddress={escrow.owner?.wallet || "GDISPUTE...RESOLVER"}
+            />
+          )}
+
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm shadow-slate-100/50 dark:border-slate-700 dark:bg-slate-900">
