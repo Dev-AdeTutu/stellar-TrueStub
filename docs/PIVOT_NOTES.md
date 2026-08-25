@@ -90,7 +90,7 @@ pivot.
 
 - Migrate the auth/webhook route logic out of `apps/frontend`'s Next API
   routes and into `apps/backend`, per the roadmap table in
-  `apps/backend/README.md`.
+  [`apps/backend/README.md`](../apps/backend/README.md).
 - Once there's an actual reason for a custom Soroban contract (something
   Trustless Work's hosted escrow doesn't cover), replace
   `contracts/contracts/hello-world` with it.

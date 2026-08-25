@@ -4,7 +4,7 @@ This is the `@truestub/backend` workspace. **It's a scaffold, not a running
 part of the product yet** — a health check and a project skeleton, nothing
 more. The frontend (`apps/frontend`) does not call this service today; it
 talks directly to Firebase and to a remote Hasura GraphQL endpoint (see the
-[frontend README](../frontend/README.md#-architecture)).
+[frontend README](../frontend/README.md#architecture)).
 
 ## Why this exists
 
