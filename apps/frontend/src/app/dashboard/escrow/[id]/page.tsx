@@ -8,6 +8,7 @@ import { EscrowPartyInfo } from "@/components/escrow/views/EscrowPartyInfo";
 import { MilestoneProgress } from "@/components/dashboard/milestone-progress";
 import { getStubEscrow } from "@/components/escrow/views/stubEscrow";
 import { formatEscrowAmount } from "@/lib/formatEscrowAmount";
+import { RatingReviewModal } from "@/components/ratings/RatingReviewModal";
 import type { Milestone } from "@/components/dashboard/RoleEscrowDashboard";
 
 const milestoneData: Milestone[] = [
@@ -125,7 +126,31 @@ export default async function EscrowDetailPage({
             <EscrowPartyInfo variant="owner" owner={escrow.owner} />
             <EscrowPartyInfo variant="beneficiary" beneficiary={escrow.beneficiary} />
           </div>
+
+          <div className="rounded-3xl border border-yellow-500/30 bg-yellow-50/40 dark:bg-yellow-950/20 p-6 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <h3 className="text-base font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                  <span>⭐</span> Post-Transaction Ratings & Reputation
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  Leave a verified review for your counterparty once the ticket or service escrow completes.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <RatingReviewModal
+                  escrowId={escrow.id}
+                  reviewerId={escrow.tenant.wallet}
+                  reviewerName={escrow.tenant.name}
+                  revieweeId={escrow.beneficiary.wallet}
+                  revieweeName={escrow.beneficiary.name}
+                  role="buyer"
+                />
+              </div>
+            </div>
+          </div>
         </div>
+
 
         <div className="space-y-6">
           <EscrowOverviewCard />
