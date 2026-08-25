@@ -38,8 +38,7 @@ business logic are untouched:
   transfer confirmation) across components, GraphQL types, and the data
   model. This is a real feature-level refactor, not a copy change — worth
   its own pass.
-- Commission a new logo/favicon; the current one is a generic lock icon
-  inherited from SafeTrust.
+- Commission a new logo/favicon (completed in #48: designed ticket-resale-escrow logo and favicon, replaced legacy lock icons across all public assets and metadata).
 - Point `NEXT_PUBLIC_HASURA_GRAPHQL_URL` at a Hasura instance whose schema
   actually models tickets/listings, once the domain rename above happens.
 
