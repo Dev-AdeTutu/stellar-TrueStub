@@ -3,8 +3,10 @@ import { createHmac, timingSafeEqual } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { updateEscrowStatus } from '@/lib/server/hasura';
+import { sendEscrowNotification } from '@/lib/server/notification';
 
 const STATUS_MAP: Record<string, string> = {
+
   funded: 'funded',
   active: 'funded',
   completed: 'completed',
@@ -77,6 +79,14 @@ export async function POST(request: NextRequest) {
     const result = await updateEscrowStatus(body.engagementId, mappedStatus);
     const affected = result.update_escrows.affected_rows;
 
+    // Trigger outside-the-app notification (Email & Push)
+    await sendEscrowNotification({
+      escrowId: body.engagementId,
+      contractId: body.contractId,
+      engagementId: body.engagementId,
+      status: mappedStatus,
+    });
+
     console.log(`[webhook] ✅ status 200 — escrow synced`);
     console.log(`  contractId:    ${body.contractId}`);
     console.log(`  engagementId:  ${body.engagementId}`);
@@ -88,7 +98,9 @@ export async function POST(request: NextRequest) {
       engagementId: body.engagementId,
       status: mappedStatus,
       rowsUpdated: affected,
+      notificationSent: true,
     });
+
   } catch (error) {
     console.error('[webhook] ❌ Hasura mutation failed:', error);
     return NextResponse.json({ error: 'Failed to sync escrow status' }, { status: 500 });

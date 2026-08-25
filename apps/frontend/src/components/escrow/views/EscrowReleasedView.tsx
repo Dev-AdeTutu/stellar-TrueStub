@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { EscrowJustification } from "./EscrowJustification";
 import { EscrowPartyInfo } from "./EscrowPartyInfo";
 import { EscrowProcessStepper } from "./EscrowProcessStepper";
+import { RatingReviewModal } from "@/components/ratings/RatingReviewModal";
 import type { StubEscrowDetail } from "./types";
 
 export function EscrowReleasedView({ data }: { data: StubEscrowDetail }) {
@@ -48,6 +49,29 @@ export function EscrowReleasedView({ data }: { data: StubEscrowDetail }) {
         </div>
       </section>
 
+      <section className="rounded-2xl border border-yellow-500/30 bg-yellow-50/50 dark:bg-yellow-950/20 p-5 space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="space-y-1">
+            <h2 className="text-base font-semibold text-foreground flex items-center gap-2">
+              <span>⭐</span> Transaction Complete — Leave a Review
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              Rate your counterparty to build on-chain and marketplace trust for this escrow transaction.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <RatingReviewModal
+              escrowId={data.id}
+              reviewerId={data.tenant?.wallet || "buyer-1"}
+              reviewerName={data.tenant?.name || "Buyer"}
+              revieweeId={data.beneficiary?.wallet || "seller-1"}
+              revieweeName={data.beneficiary?.name || "Seller"}
+              role="buyer"
+            />
+          </div>
+        </div>
+      </section>
+
       <section className="rounded-lg border border-border bg-card p-4">
         <h2 className="text-sm font-semibold text-foreground">Beneficiary contact</h2>
         <dl className="mt-3 grid gap-3 text-sm sm:grid-cols-2">
@@ -64,3 +88,4 @@ export function EscrowReleasedView({ data }: { data: StubEscrowDetail }) {
     </div>
   );
 }
+
