@@ -1,11 +1,10 @@
 # TrueStub — Backend (scaffold)
 
-This is the `@truestub/backend` workspace. It's still mostly a scaffold —
-one real route lives here so far (`sync-user`), plus a health check and a
-project skeleton. The frontend (`apps/frontend`) does not call this service
-for anything else today; it talks directly to Firebase and to a remote
-Hasura GraphQL endpoint (see the
-[frontend README](../frontend/README.md#-architecture)).
+This is the `@truestub/backend` workspace. **It's a scaffold, not a running
+part of the product yet** — a health check and a project skeleton, nothing
+more. The frontend (`apps/frontend`) does not call this service today; it
+talks directly to Firebase and to a remote Hasura GraphQL endpoint (see the
+[frontend README](../frontend/README.md#architecture)).
 
 ## Why this exists
 
