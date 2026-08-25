@@ -1,5 +1,10 @@
+/**
+ * The Hasura admin secret must never live in this workspace (see this
+ * repo's frontend README, Hasura section) — apps/backend holds it and
+ * performs the actual mutation. This is a server-to-server call into it.
+ */
 export async function updateEscrowStatus(
-  escrowId: string,
+  contractId: string,
   status: string,
 ): Promise<{ update_escrows: { affected_rows: number } }> {
   const hasuraUrl =
