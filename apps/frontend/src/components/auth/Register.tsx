@@ -21,7 +21,9 @@ import {
 import Illustration from "@/components/auth/ui/Illustration";
 import Cookies from "js-cookie";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import LanguageSwitcher from "@/components/language/LanguageSwitcher";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 const COUNTRY_CODES = [
   { code: "+506", country: "Costa Rica", flag: "🇨🇷" },
@@ -36,13 +38,8 @@ const COUNTRY_CODES = [
   { code: "+54",  country: "Argentina", flag: "🇦🇷" },
 ];
 
-const ERROR_MESSAGES: Record<string, string> = {
-  "auth/email-already-in-use": "An account with this email already exists",
-  "auth/weak-password": "Password must be at least 6 characters",
-  "auth/invalid-email": "Invalid email address",
-};
-
 export default function RegisterPage() {
+  const { t } = useTranslation();
   const router = useRouter();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -55,6 +52,19 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
 
   const clearError = () => setError("");
+
+  const getErrorMessage = (code: string) => {
+    switch (code) {
+      case "auth/email-already-in-use":
+        return t("auth.emailInUse");
+      case "auth/weak-password":
+        return t("auth.weakPassword");
+      case "auth/invalid-email":
+        return t("auth.invalidEmail");
+      default:
+        return t("auth.unexpectedError");
+    }
+  };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,10 +86,6 @@ export default function RegisterPage() {
       const token = await credential.user.getIdToken();
 
       // Step 2 — sync user to backend-TrueStub (non-blocking)
-      // This call is optional — frontend-TrueStub runs standalone without
-      // backend-TrueStub. If the backend is not running or BACKEND_URL is
-      // not set, the sync is skipped silently and registration still completes.
-      // When backend-TrueStub IS running, the sync writes the user to PostgreSQL.
       try {
         await fetch("/api/auth/sync-user", {
           method: "POST",
@@ -96,7 +102,6 @@ export default function RegisterPage() {
           }),
         });
       } catch {
-        // Backend not available — skip sync, continue registration normally
         console.warn("User sync skipped — backend-TrueStub not available");
       }
 
@@ -109,26 +114,20 @@ export default function RegisterPage() {
 
       useGlobalAuthenticationStore.getState().setToken(token);
 
-      toast.success("Account created successfully!", {
-        description: "Please sign in with your new credentials.",
+      toast.success(t("auth.accountCreatedSuccess"), {
+        description: t("auth.accountCreatedDesc"),
         duration: 4000,
       });
 
       router.push("/login");
     } catch (err: unknown) {
       if (err instanceof FirebaseError) {
-        toast.error(
-          ERROR_MESSAGES[err.code] ?? "An unexpected error occurred. Please try again.",
-          { duration: 4000 },
-        );
-        setError(
-          ERROR_MESSAGES[err.code] ?? "Registration failed — please try again",
-        );
+        const msg = getErrorMessage(err.code);
+        toast.error(msg, { duration: 4000 });
+        setError(msg);
       } else {
-        toast.error("An unexpected error occurred. Please try again.", {
-          duration: 4000,
-        });
-        setError("Registration failed — please try again");
+        toast.error(t("auth.unexpectedError"), { duration: 4000 });
+        setError(t("auth.registrationFailed"));
       }
     } finally {
       setIsLoading(false);
@@ -144,28 +143,30 @@ export default function RegisterPage() {
               <Image src="/img/logo.png" alt="TrueStub" width={32} height={32} />
               <h1 className="text-2xl font-bold">TrueStub</h1>
             </div>
-            <ThemeToggle />
+            <div className="flex items-center space-x-2">
+              <LanguageSwitcher />
+              <ThemeToggle />
+            </div>
           </div>
 
           <form className="space-y-5 overflow-visible" onSubmit={handleRegister}>
-
             {/* First Name + Last Name */}
             <div className="flex gap-2">
               <div className="space-y-2 flex-1">
-                <Label htmlFor="firstName">First Name</Label>
+                <Label htmlFor="firstName">{t("auth.firstName")}</Label>
                 <Input
                   id="firstName"
-                  placeholder="First name"
+                  placeholder={t("auth.firstNamePlaceholder")}
                   required
                   value={firstName}
                   onChange={(e) => { setFirstName(e.target.value); clearError(); }}
                 />
               </div>
               <div className="space-y-2 flex-1">
-                <Label htmlFor="lastName">Last Name</Label>
+                <Label htmlFor="lastName">{t("auth.lastName")}</Label>
                 <Input
                   id="lastName"
-                  placeholder="Last name"
+                  placeholder={t("auth.lastNamePlaceholder")}
                   required
                   value={lastName}
                   onChange={(e) => { setLastName(e.target.value); clearError(); }}
@@ -175,7 +176,7 @@ export default function RegisterPage() {
 
             {/* Phone */}
             <div className="space-y-2">
-              <Label htmlFor="phone">Phone Number</Label>
+              <Label htmlFor="phone">{t("auth.phoneNumber")}</Label>
               <div className="flex gap-2">
                 <Select
                   value={phoneCountryCode}
@@ -195,7 +196,7 @@ export default function RegisterPage() {
                 <Input
                   id="phone"
                   type="tel"
-                  placeholder="Enter your phone number"
+                  placeholder={t("auth.phonePlaceholder")}
                   required
                   value={phone}
                   onChange={(e) => { setPhone(e.target.value); clearError(); }}
@@ -205,13 +206,13 @@ export default function RegisterPage() {
 
             {/* Location */}
             <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
+              <Label htmlFor="location">{t("auth.location")}</Label>
               <Select
                 value={location}
                 onValueChange={(v) => { setLocation(v); clearError(); }}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select your location" />
+                  <SelectValue placeholder={t("auth.selectLocation")} />
                 </SelectTrigger>
                 <SelectContent position="popper" sideOffset={4}>
                   <SelectItem value="cr">Costa Rica</SelectItem>
@@ -224,11 +225,11 @@ export default function RegisterPage() {
 
             {/* Email */}
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t("auth.emailOrUsername")}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="Enter your email"
+                placeholder={t("auth.emailPlaceholder")}
                 required
                 value={email}
                 onChange={(e) => { setEmail(e.target.value); clearError(); }}
@@ -237,11 +238,11 @@ export default function RegisterPage() {
 
             {/* Password */}
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t("auth.password")}</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="Enter your password"
+                placeholder={t("auth.passwordPlaceholder")}
                 required
                 minLength={6}
                 value={password}
@@ -254,7 +255,7 @@ export default function RegisterPage() {
               className="w-full bg-[#2857B8] hover:bg-[#2857B8]/90"
               disabled={isLoading}
             >
-              {isLoading ? "Creating account..." : "Sign Up"}
+              {isLoading ? t("auth.creatingAccount") : t("auth.signUpButton")}
             </Button>
 
             {error && (
@@ -263,9 +264,9 @@ export default function RegisterPage() {
           </form>
 
           <div className="text-center text-sm">
-            Already have an account?{" "}
+            {t("auth.alreadyHaveAccount")}{" "}
             <Link href="/login" className="text-[#2857B8] hover:underline">
-              Sign in
+              {t("auth.signInLink")}
             </Link>
           </div>
         </div>

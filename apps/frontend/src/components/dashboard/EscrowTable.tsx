@@ -1,3 +1,5 @@
+"use client";
+
 import { ArrowUpDown, MoreHorizontal, Eye, FileText, CheckCircle2, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -21,6 +23,7 @@ import {
 import { format } from 'date-fns';
 import { EscrowData } from './RoleEscrowDashboard';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 
 interface EscrowTableProps {
   escrows: EscrowData[];
@@ -36,17 +39,21 @@ const statusBadgeVariant = {
   cancelled: 'destructive',
 } as const;
 
-const statusText = {
-  pending: 'Pending',
-  funded: 'Funded',
-  check_in_approved: 'Check-in Approved',
-  check_out_approved: 'Check-out Approved',
-  completed: 'Completed',
-  cancelled: 'Cancelled',
-} as const;
-
 export function EscrowTable({ escrows, userRole }: EscrowTableProps) {
+  const { t } = useTranslation();
   const router = useRouter();
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'pending': return t('dashboard.statusPending');
+      case 'funded': return t('dashboard.statusFunded');
+      case 'check_in_approved': return t('dashboard.statusCheckInApproved');
+      case 'check_out_approved': return t('dashboard.statusCheckOutApproved');
+      case 'completed': return t('dashboard.statusCompleted');
+      case 'cancelled': return t('dashboard.statusCancelled');
+      default: return status;
+    }
+  };
 
   const handleViewDetails = (escrowId: string) => {
     router.push(`/dashboard/escrow/${escrowId}`);
@@ -62,11 +69,11 @@ export function EscrowTable({ escrows, userRole }: EscrowTableProps) {
   };
 
   const formatDate = (dateString?: string) => {
-    if (!dateString) return 'N/A';
+    if (!dateString) return '—';
     try {
       return format(new Date(dateString), 'MMM d, yyyy');
     } catch (e) {
-      return 'Invalid date';
+      return '—';
     }
   };
 
@@ -79,7 +86,7 @@ export function EscrowTable({ escrows, userRole }: EscrowTableProps) {
           className="w-full"
           onClick={() => handleViewDetails(escrow.id)}
         >
-          Approve Check-in
+          {t('dashboard.approveCheckIn')}
         </Button>
       );
     }
@@ -92,7 +99,7 @@ export function EscrowTable({ escrows, userRole }: EscrowTableProps) {
           className="w-full"
           onClick={() => handleViewDetails(escrow.id)}
         >
-          Complete Check-out
+          {t('dashboard.completeCheckOut')}
         </Button>
       );
     }
@@ -100,12 +107,12 @@ export function EscrowTable({ escrows, userRole }: EscrowTableProps) {
     return (
       <Button 
         variant="ghost" 
-        size="sm"
+        size="sm" 
         className="w-full justify-start"
         onClick={() => handleViewDetails(escrow.id)}
       >
         <Eye className="h-4 w-4 mr-2" />
-        View
+        {t('dashboard.viewDetails')}
       </Button>
     );
   };
@@ -116,39 +123,39 @@ export function EscrowTable({ escrows, userRole }: EscrowTableProps) {
         <TableHeader>
           <TableRow className="bg-gray-50 dark:bg-slate-700 border-b border-gray-200 dark:border-slate-700">
             <TableHead className="w-[50px] text-gray-600 dark:text-gray-300 font-semibold">
-              <Checkbox />
+              <Checkbox aria-label="Select all" />
             </TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">Booking ID</TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">Hotel</TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">Check-in</TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">Check-out</TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">Amount</TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">Status</TableHead>
-            <TableHead className="text-right text-gray-600 dark:text-gray-300 font-semibold">Actions</TableHead>
+            <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">{t('dashboard.tableBookingId')}</TableHead>
+            <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">{t('dashboard.tableHotelEvent')}</TableHead>
+            <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">{t('dashboard.checkInDate')}</TableHead>
+            <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">{t('dashboard.tableDates')}</TableHead>
+            <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">{t('dashboard.tableAmount')}</TableHead>
+            <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">{t('dashboard.tableStatus')}</TableHead>
+            <TableHead className="text-right text-gray-600 dark:text-gray-300 font-semibold">{t('dashboard.tableActions')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {escrows.length === 0 ? (
             <TableRow className="border-b border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800">
               <TableCell colSpan={8} className="h-24 text-center text-gray-500 dark:text-slate-400">
-                No escrows found
+                {t('interestedPeople.table.notFound')}
               </TableCell>
             </TableRow>
           ) : (
             escrows.map((escrow) => (
               <TableRow key={escrow.id} className="border-b border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700/50">
                 <TableCell>
-                  <Checkbox />
+                  <Checkbox aria-label={`Select escrow ${escrow.id}`} />
                 </TableCell>
                 <TableCell className="font-mono text-sm text-gray-500 dark:text-gray-400">
-                  {escrow.metadata?.bookingId || 'N/A'}
+                  {escrow.metadata?.bookingId || '—'}
                 </TableCell>
                 <TableCell className="text-gray-900 dark:text-white">
                   <div className="font-medium">
-                    {escrow.metadata?.hotelName || 'N/A'}
+                    {escrow.metadata?.hotelName || '—'}
                   </div>
                   <div className="text-xs text-muted-foreground dark:text-slate-400">
-                    {escrow.marker.slice(0, 6)}...{escrow.marker.slice(-4)}
+                    {escrow.marker ? `${escrow.marker.slice(0, 6)}...${escrow.marker.slice(-4)}` : ''}
                   </div>
                 </TableCell>
                 <TableCell className="text-gray-900 dark:text-white">{formatDate(escrow.metadata?.checkInDate)}</TableCell>
@@ -161,35 +168,35 @@ export function EscrowTable({ escrows, userRole }: EscrowTableProps) {
                     variant={statusBadgeVariant[escrow.status] || 'outline'}
                     className="whitespace-nowrap"
                   >
-                    {statusText[escrow.status] || escrow.status}
+                    {getStatusText(escrow.status)}
                   </Badge>
                 </TableCell>
                 <TableCell>
                   <div className="flex justify-end">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
+                        <Button variant="ghost" className="h-8 w-8 p-0" aria-label="Open menu">
                           <span className="sr-only">Open menu</span>
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuLabel>{t('dashboard.tableActions')}</DropdownMenuLabel>
                         <DropdownMenuItem
                           onClick={() => handleViewDetails(escrow.id)}
                           className="cursor-pointer"
                         >
                           <Eye className="h-4 w-4 mr-2" />
-                          View Details
+                          {t('dashboard.viewDetails')}
                         </DropdownMenuItem>
                         <DropdownMenuItem className="cursor-pointer">
                           <FileText className="h-4 w-4 mr-2" />
-                          View Contract
+                          {t('common.view')}
                         </DropdownMenuItem>
                         {escrow.status === 'completed' && (
                           <DropdownMenuItem className="cursor-pointer">
                             <CheckCircle2 className="h-4 w-4 mr-2 text-green-500" />
-                            Mark as Completed
+                            {t('dashboard.statusCompleted')}
                           </DropdownMenuItem>
                         )}
                         {escrow.status !== 'cancelled' && escrow.status !== 'completed' && (
@@ -197,7 +204,7 @@ export function EscrowTable({ escrows, userRole }: EscrowTableProps) {
                             <DropdownMenuSeparator />
                             <DropdownMenuItem className="text-red-600 cursor-pointer">
                               <XCircle className="h-4 w-4 mr-2" />
-                              Cancel Booking
+                              {t('common.cancel')}
                             </DropdownMenuItem>
                           </>
                         )}

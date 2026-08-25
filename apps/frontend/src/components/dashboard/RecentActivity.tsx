@@ -1,7 +1,10 @@
+"use client";
+
 import { Activity, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { EscrowData } from './RoleEscrowDashboard';
+import { useTranslation } from 'react-i18next';
 
 interface RecentActivityProps {
   escrows: EscrowData[];
@@ -17,28 +20,6 @@ const getActivityIcon = (status: string) => {
       return <AlertCircle className="h-4 w-4 text-blue-500" />;
     default:
       return <Clock className="h-4 w-4 text-yellow-500" />;
-  }
-};
-
-const getActivityMessage = (escrow: EscrowData) => {
-  const bookingId = escrow.metadata?.bookingId || 'Unknown';
-  const hotelName = escrow.metadata?.hotelName ? `at ${escrow.metadata.hotelName}` : '';
-  
-  switch (escrow.status) {
-    case 'pending':
-      return `Booking #${bookingId} ${hotelName} is pending confirmation`;
-    case 'funded':
-      return `Booking #${bookingId} ${hotelName} has been funded`;
-    case 'check_in_approved':
-      return `Check-in approved for booking #${bookingId} ${hotelName}`;
-    case 'check_out_approved':
-      return `Check-out completed for booking #${bookingId} ${hotelName}`;
-    case 'completed':
-      return `Booking #${bookingId} ${hotelName} has been completed`;
-    case 'cancelled':
-      return `Booking #${bookingId} ${hotelName} was cancelled`;
-    default:
-      return `Update for booking #${bookingId} ${hotelName}`;
   }
 };
 
@@ -58,6 +39,42 @@ const getStatusBadgeVariant = (status: string) => {
 };
 
 export function RecentActivity({ escrows }: RecentActivityProps) {
+  const { t } = useTranslation();
+
+  const getActivityMessage = (escrow: EscrowData) => {
+    const bookingId = escrow.metadata?.bookingId || 'Unknown';
+    const hotelName = escrow.metadata?.hotelName ? `(${escrow.metadata.hotelName})` : '';
+    
+    switch (escrow.status) {
+      case 'pending':
+        return `#${bookingId} ${hotelName} - ${t('dashboard.statusPending')}`;
+      case 'funded':
+        return `#${bookingId} ${hotelName} - ${t('dashboard.statusFunded')}`;
+      case 'check_in_approved':
+        return `#${bookingId} ${hotelName} - ${t('dashboard.statusCheckInApproved')}`;
+      case 'check_out_approved':
+        return `#${bookingId} ${hotelName} - ${t('dashboard.statusCheckOutApproved')}`;
+      case 'completed':
+        return `#${bookingId} ${hotelName} - ${t('dashboard.statusCompleted')}`;
+      case 'cancelled':
+        return `#${bookingId} ${hotelName} - ${t('dashboard.statusCancelled')}`;
+      default:
+        return `#${bookingId} ${hotelName}`;
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'pending': return t('dashboard.statusPending');
+      case 'funded': return t('dashboard.statusFunded');
+      case 'check_in_approved': return t('dashboard.statusCheckInApproved');
+      case 'check_out_approved': return t('dashboard.statusCheckOutApproved');
+      case 'completed': return t('dashboard.statusCompleted');
+      case 'cancelled': return t('dashboard.statusCancelled');
+      default: return status;
+    }
+  };
+
   // Sort escrows by most recent update
   const recentEscrows = [...escrows]
     .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
@@ -68,13 +85,13 @@ export function RecentActivity({ escrows }: RecentActivityProps) {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium dark:text-white">
-            Recent Activity
+            {t('dashboard.recentActivity')}
           </CardTitle>
           <Activity className="h-4 w-4 text-muted-foreground dark:text-gray-400" />
         </CardHeader>
         <CardContent>
           <div className="text-sm text-muted-foreground dark:text-gray-400 text-center py-4">
-            No recent activity
+            {t('dashboard.noActivity')}
           </div>
         </CardContent>
       </Card>
@@ -85,7 +102,7 @@ export function RecentActivity({ escrows }: RecentActivityProps) {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium dark:text-white">
-          Recent Activity
+          {t('dashboard.recentActivity')}
         </CardTitle>
         <Activity className="h-4 w-4 text-muted-foreground dark:text-gray-400" />
       </CardHeader>
@@ -104,7 +121,7 @@ export function RecentActivity({ escrows }: RecentActivityProps) {
                   variant={getStatusBadgeVariant(escrow.status)}
                   className="text-xs h-5"
                 >
-                  {escrow.status.replace(/_/g, ' ')}
+                  {getStatusText(escrow.status)}
                 </Badge>
               </div>
               <p className="text-xs text-muted-foreground dark:text-gray-400 mt-1">
