@@ -91,3 +91,28 @@ export type UserNotificationsSubscription = {
     created_at: string;
   }>;
 };
+
+export type Review = {
+  id: string;
+  escrow_id: string;
+  reviewer_id: string;
+  reviewer_name?: string | null;
+  reviewee_id: string;
+  rating: number;
+  comment?: string | null;
+  role: "buyer" | "seller" | "tenant" | "owner";
+  created_at: string;
+};
+
+export type UserReputationSummary = {
+  user_id: string;
+  total_reviews: number;
+  average_rating: number;
+  five_star_count: number;
+  four_star_count: number;
+  three_star_count: number;
+  two_star_count: number;
+  one_star_count: number;
+  positive_percentage: number;
+};
+

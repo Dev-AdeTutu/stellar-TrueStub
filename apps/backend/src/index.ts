@@ -7,6 +7,7 @@ import { corsMiddleware, helmetMiddleware } from "./middleware/security";
 import { authRateLimiter } from "./middleware/rateLimiter";
 import { errorHandler } from "./middleware/errorHandler";
 import { healthRouter } from "./routes/health";
+import { webhookRouter } from "./routes/webhooks";
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use("/api/auth", authRateLimiter);
 
 // ── 5. Routes ──────────────────────────────────────────────────────────────
 app.use("/health", healthRouter);
+app.use("/webhooks", webhookRouter);
 
 // ── 6. Centralised error handler (#26) ────────────────────────────────────
 // Must be the last middleware registered. Catches errors forwarded via
@@ -41,3 +43,4 @@ app.use(errorHandler);
 app.listen(env.PORT, () => {
   logger.info({ port: env.PORT, env: env.NODE_ENV }, "TrueStub backend listening");
 });
+

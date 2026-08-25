@@ -1,43 +1,57 @@
-/**
- * Environment wiring.
- *
- * Read once at startup, validated, and exported as a typed object.
- * Route handlers and middleware should never read `process.env` directly.
- *
- * Use `requireEnv` for variables that have no safe default and must be
- * present before the server can start (e.g. database URLs, signing secrets).
- */
+import { z } from "zod";
 
-export function requireEnv(name: string): string {
-  const value = process.env[name];
-  if (!value) throw new Error(`Missing required environment variable: ${name}`);
-  return value;
+/**
+ * Environment validation schema for TrueStub backend.
+ *
+ * Defines and validates the environment configuration shape at startup.
+ * As real routes land (see README roadmap), their variables are typed here
+ * to prevent silent runtime failures and eliminate direct `process.env` access.
+ */
+export const envSchema = z.object({
+  PORT: z
+    .string()
+    .optional()
+    .transform((val) => (val ? Number(val) : 4000))
+    .pipe(
+      z
+        .number()
+        .int("PORT must be an integer")
+        .min(1, "PORT must be at least 1")
+        .max(65535, "PORT must be at most 65535"),
+    ),
+  NODE_ENV: z
+    .enum(["development", "production", "test"])
+    .default("development"),
+
+  // Roadmap variables for upcoming route migrations (optional until routes land)
+  TRUSTLESS_WORK_WEBHOOK_SECRET: z.string().min(1).optional(),
+  HASURA_GRAPHQL_ENDPOINT: z.string().url("HASURA_GRAPHQL_ENDPOINT must be a valid URL").optional(),
+  HASURA_GRAPHQL_ADMIN_SECRET: z.string().min(1).optional(),
+});
+
+export type Env = z.infer<typeof envSchema>;
+
+/**
+ * Validates raw environment variables against the schema.
+ * Fails fast with a clear, formatted error message if required variables are missing or malformed.
+ */
+export function validateEnv(rawEnv: NodeJS.ProcessEnv = process.env): Env {
+  const result = envSchema.safeParse(rawEnv);
+
+  if (!result.success) {
+    const errorMessages = result.error.errors
+      .map((err) => `  - ${err.path.join(".")}: ${err.message}`)
+      .join("\n");
+
+    const fullMessage = `❌ Invalid environment variables:\n${errorMessages}`;
+    console.error(fullMessage);
+    throw new Error(fullMessage);
+  }
+
+  return result.data;
 }
 
-export const env = {
-  // ── Server ────────────────────────────────────────────────────────────────
-  PORT: Number(process.env.PORT ?? 4000),
-  NODE_ENV: (process.env.NODE_ENV ?? "development") as
-    | "development"
-    | "production"
-    | "test",
-
-  // ── Logging (#23) ─────────────────────────────────────────────────────────
-  /** pino log level: trace | debug | info | warn | error | fatal */
-  LOG_LEVEL: process.env.LOG_LEVEL ?? "info",
-
-  // ── CORS (#25) ────────────────────────────────────────────────────────────
-  /**
-   * Comma-separated list of allowed frontend origins.
-   * Example: "http://localhost:3000,https://app.truestub.com"
-   */
-  CORS_ORIGINS: process.env.CORS_ORIGINS ?? "http://localhost:3000",
-
-  // ── Rate limiting (#24) ───────────────────────────────────────────────────
-  /**
-   * Max requests per window for /api/auth/* routes.
-   * Defaults: 20 requests per 15-minute window.
-   */
-  RATE_LIMIT_WINDOW_MS: Number(process.env.RATE_LIMIT_WINDOW_MS ?? 15 * 60 * 1000),
-  RATE_LIMIT_MAX: Number(process.env.RATE_LIMIT_MAX ?? 20),
-};
+/**
+ * Validated and typed environment configuration.
+ */
+export const env: Env = validateEnv(process.env);

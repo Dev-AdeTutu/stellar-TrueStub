@@ -43,10 +43,14 @@ import {
   Info,
 } from "lucide-react";
 
+import { trustlineOptions, TrustlineOption } from "@/components/tw-blocks/wallet-kit/trustlines";
+import { Coins } from "lucide-react";
+
 export interface EscrowCreationFormProps {
   bookingData: BookingData;
   eventData: EventData;
   escrowType: EscrowType;
+  selectedAsset?: string;
   onEscrowCreated: (data: EscrowResponse) => void;
   onCancel: () => void;
   className?: string;
@@ -60,10 +64,12 @@ function BookingSummaryCard({
   bookingData,
   eventData,
   escrowType,
+  currency = "USDC",
 }: {
   bookingData: BookingData;
   eventData: EventData;
   escrowType: EscrowType;
+  currency?: string;
 }) {
   const checkInDate = new Date(bookingData.checkInDate);
   const checkOutDate = new Date(bookingData.checkOutDate);
@@ -91,12 +97,20 @@ function BookingSummaryCard({
               )}
             </div>
           </div>
-          <Badge
-            variant="outline"
-            className="border-emerald-500/50 bg-emerald-500/10 text-emerald-400"
-          >
-            {escrowType === "multi_release" ? "Milestone" : "Single"} Payment
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge
+              variant="outline"
+              className="border-emerald-500/50 bg-emerald-500/10 text-emerald-400"
+            >
+              {currency}
+            </Badge>
+            <Badge
+              variant="outline"
+              className="border-emerald-500/50 bg-emerald-500/10 text-emerald-400"
+            >
+              {escrowType === "multi_release" ? "Milestone" : "Single"} Payment
+            </Badge>
+          </div>
         </div>
 
         <Separator className="my-4 bg-white/10" />
@@ -154,7 +168,7 @@ function BookingSummaryCard({
             <div className="flex items-center gap-2">
               <CreditCard className="h-4 w-4 text-emerald-400" />
               <span className="text-lg font-bold text-emerald-400">
-                {bookingData.totalAmount.toFixed(2)} {bookingData.currency || "USDC"}
+                {bookingData.totalAmount.toFixed(2)} {currency}
               </span>
             </div>
           </div>
@@ -172,6 +186,7 @@ function BookingSummaryCard({
     </div>
   );
 }
+
 
 /**
  * Escrow Type Selector Component
@@ -315,6 +330,7 @@ export function EscrowCreationForm({
   bookingData,
   eventData,
   escrowType,
+  selectedAsset: initialAsset,
   onEscrowCreated,
   onCancel,
   className = "",
@@ -322,6 +338,9 @@ export function EscrowCreationForm({
   const router = useRouter();
   const { address: walletAddress, connectWallet } = useWallet();
   const [showForm, setShowForm] = useState(false);
+  const [selectedCurrency, setSelectedCurrency] = useState<string>(
+    initialAsset || bookingData.currency || "USDC"
+  );
 
   const {
     escrowFormData,
@@ -333,6 +352,7 @@ export function EscrowCreationForm({
     bookingData,
     eventData,
     escrowType,
+    selectedAsset: selectedCurrency,
   });
 
   // Determine if wallet is connected
@@ -358,6 +378,7 @@ export function EscrowCreationForm({
           bookingData={bookingData}
           eventData={eventData}
           escrowType={escrowType}
+          currency={selectedCurrency}
         />
         <WalletConnectionPrompt onConnect={connectWallet} />
       </div>
@@ -372,6 +393,7 @@ export function EscrowCreationForm({
         bookingData={bookingData}
         eventData={eventData}
         escrowType={escrowType}
+        currency={selectedCurrency}
       />
 
       {/* Main Card */}
@@ -382,9 +404,9 @@ export function EscrowCreationForm({
               <Shield className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
             </div>
             <div>
-              <CardTitle className="text-xl">Secure Your Booking</CardTitle>
+              <CardTitle className="text-xl">Secure Your Escrow Payment</CardTitle>
               <CardDescription>
-                Create a blockchain escrow to protect your payment
+                Create a blockchain escrow denominated in your chosen Stellar asset
               </CardDescription>
             </div>
           </div>
@@ -393,6 +415,54 @@ export function EscrowCreationForm({
         <CardContent className="space-y-6 pt-6">
           {/* Security Banner */}
           <SecurityBanner />
+
+          {/* Payment Asset Selector */}
+          <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4 dark:border-slate-700 dark:bg-slate-800/40 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Coins className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                <h4 className="font-semibold text-sm text-slate-900 dark:text-white">
+                  Payment Asset / Currency
+                </h4>
+              </div>
+              <span className="text-xs text-muted-foreground">Multi-currency enabled</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {trustlineOptions.map((asset) => {
+                const isSelected = selectedCurrency.toUpperCase() === asset.symbol.toUpperCase();
+                return (
+                  <button
+                    key={asset.value}
+                    type="button"
+                    onClick={() => setSelectedCurrency(asset.symbol)}
+                    className={`flex items-center gap-3 p-3 rounded-lg border text-left transition-all ${
+                      isSelected
+                        ? "border-emerald-500 bg-emerald-50/60 dark:bg-emerald-950/30 ring-1 ring-emerald-500"
+                        : "border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800 hover:border-slate-300"
+                    }`}
+                  >
+                    <span className="text-2xl">{asset.icon || "🪙"}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <span className="font-semibold text-sm text-slate-900 dark:text-white">
+                          {asset.symbol}
+                        </span>
+                        {isSelected && (
+                          <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                            ✓ Active
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-muted-foreground truncate">
+                        {asset.description || asset.label}
+                      </p>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
           {/* Escrow Type Info */}
           <EscrowTypeInfo escrowType={escrowType} />
@@ -406,10 +476,10 @@ export function EscrowCreationForm({
             <div className="text-sm text-blue-700 dark:text-blue-300">
               <p className="font-medium">How it works:</p>
               <ol className="mt-2 space-y-1 list-decimal list-inside">
-                <li>Your payment is locked in a secure smart contract</li>
-                <li>The event cannot access funds until conditions are met</li>
-                <li>If there&apos;s a dispute, our resolution team will help</li>
-                <li>After successful checkout, funds are released to the event</li>
+                <li>Your payment is locked in a secure smart contract in {selectedCurrency}</li>
+                <li>The seller cannot access funds until conditions are met</li>
+                <li>If there&apos;s a dispute, our resolution team will arbitrate</li>
+                <li>After successful delivery confirmation, funds are released</li>
               </ol>
             </div>
           </div>
@@ -424,7 +494,7 @@ export function EscrowCreationForm({
                 disabled={!isValid}
               >
                 <Lock className="mr-2 h-4 w-4" />
-                Proceed to Create Escrow
+                Proceed to Create Escrow ({selectedCurrency})
                 <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
               <p className="mt-3 text-xs text-slate-500">
@@ -433,6 +503,7 @@ export function EscrowCreationForm({
             </div>
           ) : (
             <div className="space-y-4">
+
               <div className="flex items-center justify-between">
                 <h3 className="font-semibold text-slate-900 dark:text-white">
                   Escrow Configuration
