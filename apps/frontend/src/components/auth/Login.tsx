@@ -20,16 +20,12 @@ import { MainWalletSelectionModal } from "./wallet/components/MainWalletSelectio
 import { WalletSelectionModal } from "./wallet/components/WalletSelectionModal";
 import { MetaMaskWalletModal } from "./wallet/components/MetaMaskWalletModal";
 import { toast } from "sonner";
-
-const ERROR_MESSAGES: Record<string, string> = {
-  "auth/invalid-credential": "Invalid email or password",
-  "auth/user-not-found": "No account found with this email",
-  "auth/wrong-password": "Invalid email or password",
-  "auth/too-many-requests": "Too many attempts — please try again later",
-  "auth/invalid-email": "Invalid email address",
-};
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "@/components/language/LanguageSwitcher";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 export default function LoginPage() {
+  const { t } = useTranslation();
   const { address, token } = useGlobalAuthenticationStore();
   const {
     handleConnect,
@@ -52,6 +48,22 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const getErrorMessage = (code: string) => {
+    switch (code) {
+      case "auth/invalid-credential":
+      case "auth/wrong-password":
+        return t("auth.invalidCredential");
+      case "auth/user-not-found":
+        return t("auth.userNotFound");
+      case "auth/too-many-requests":
+        return t("auth.tooManyRequests");
+      case "auth/invalid-email":
+        return t("auth.invalidEmail");
+      default:
+        return t("auth.unexpectedError");
+    }
+  };
+
   useEffect(() => {
     if ((address || token) && pathname === "/login") {
       router.push("/dashboard/escrow-dashboard");
@@ -70,22 +82,18 @@ export default function LoginPage() {
       // setToken handles cookie sync internally via data.ts
       useGlobalAuthenticationStore.getState().setToken(idToken);
 
-      toast.success("Login successful!", {
-        description: "Redirecting to your dashboard...",
+      toast.success(t("auth.loginSuccess"), {
+        description: t("auth.redirectingDashboard"),
       });
       router.push("/dashboard/escrow-dashboard");
     } catch (err: unknown) {
       if (err instanceof FirebaseError) {
-        toast.error(
-          ERROR_MESSAGES[err.code] ?? "An unexpected error occurred. Please try again.",
-          { duration: 4000 }
-        );
-        setError(ERROR_MESSAGES[err.code] ?? "Login failed — please try again");
+        const msg = getErrorMessage(err.code);
+        toast.error(msg, { duration: 4000 });
+        setError(msg);
       } else {
-        toast.error("An unexpected error occurred. Please try again.", {
-          duration: 4000,
-        });
-        setError("Login failed — please try again");
+        toast.error(t("auth.unexpectedError"), { duration: 4000 });
+        setError(t("auth.loginFailed"));
       }
     } finally {
       setIsLoading(false);
@@ -96,28 +104,35 @@ export default function LoginPage() {
     <div className="flex min-h-screen">
       <div className="flex w-full flex-col items-center justify-center px-4 md:w-1/2">
         <div className="w-full max-w-sm space-y-6">
-          <div className="flex items-center space-x-2">
-            <Image src="/img/logo.png" alt="TrueStub" width={32} height={32} />
-            <h1 className="text-2xl font-bold">TrueStub</h1>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Image src="/img/logo.png" alt="TrueStub" width={32} height={32} />
+              <h1 className="text-2xl font-bold">TrueStub</h1>
+            </div>
+            <div className="flex items-center space-x-2">
+              <LanguageSwitcher />
+              <ThemeToggle />
+            </div>
           </div>
 
           <form className="space-y-4" onSubmit={handleLogin}>
             <div className="space-y-2">
-              <Label htmlFor="email">Email or username</Label>
+              <Label htmlFor="email">{t("auth.emailOrUsername")}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="Enter your email"
+                placeholder={t("auth.emailPlaceholder")}
                 required
                 value={email}
                 onChange={(e) => { setEmail(e.target.value); setError(""); }}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t("auth.password")}</Label>
               <Input
                 id="password"
                 type="password"
+                placeholder={t("auth.passwordPlaceholder")}
                 required
                 value={password}
                 onChange={(e) => { setPassword(e.target.value); setError(""); }}
@@ -131,14 +146,14 @@ export default function LoginPage() {
                   htmlFor="remember"
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  Remember me
+                  {t("auth.rememberMe")}
                 </label>
               </div>
               <Link
                 href="/forgot-password"
                 className="text-sm text-[#2857B8] hover:underline"
               >
-                Forgot your password?
+                {t("auth.forgotPassword")}
               </Link>
             </div>
 
@@ -147,7 +162,7 @@ export default function LoginPage() {
               className="w-full bg-[#2857B8] hover:bg-[#2857B8]/90"
               disabled={isLoading}
             >
-              {isLoading ? "Signing in..." : "Login"}
+              {isLoading ? t("auth.signingIn") : t("auth.loginButton")}
             </Button>
 
             {error && (
@@ -161,7 +176,7 @@ export default function LoginPage() {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-white dark:bg-[#0a0a0a] px-2 text-muted-foreground dark:text-gray-400">
-                or
+                {t("auth.or")}
               </span>
             </div>
           </div>
@@ -174,7 +189,7 @@ export default function LoginPage() {
                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
               </svg>
-              Login with Google
+              {t("auth.loginWithGoogle")}
             </Button>
 
             <Button
@@ -183,14 +198,14 @@ export default function LoginPage() {
               onClick={handleConnect}
             >
               <Wallet className="mr-2 h-4 w-4" />
-              Login with wallet
+              {t("auth.loginWithWallet")}
             </Button>
           </div>
 
           <div className="text-center text-sm">
-            Don&apos;t have an account?{" "}
+            {t("auth.dontHaveAccount")}{" "}
             <Link href="/register" className="text-[#2857B8] hover:underline">
-              Register here
+              {t("auth.registerHere")}
             </Link>
           </div>
         </div>

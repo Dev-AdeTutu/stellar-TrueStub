@@ -44,6 +44,17 @@ export default function WalletConnectionModal({
     }
   }, [selectedWallet, onWalletConnected]);
 
+  // Handle ESC key press
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
   const handleConnect = async (walletType: WalletType) => {
     try {
       await connectWallet(walletType);
@@ -67,33 +78,42 @@ export default function WalletConnectionModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-900 rounded-lg p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+    <div
+      className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="wallet-connection-modal-title"
+    >
+      <div className="bg-white dark:bg-gray-900 rounded-lg p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-200 dark:border-gray-800">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold">Connect Wallet</h2>
+          <h2 id="wallet-connection-modal-title" className="text-xl font-bold text-gray-900 dark:text-white">
+            Connect Wallet
+          </h2>
           <button
+            type="button"
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            aria-label="Close connect wallet modal"
+            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 p-1 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             ×
           </button>
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-800 text-sm font-medium">{error.message}</p>
+          <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg" role="alert">
+            <p className="text-red-800 dark:text-red-300 text-sm font-medium">{error.message}</p>
           </div>
         )}
 
         <Tabs defaultValue="popular" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-3" aria-label="Wallet categories">
             <TabsTrigger value="popular">Popular</TabsTrigger>
             <TabsTrigger value="stellar">Stellar</TabsTrigger>
             <TabsTrigger value="ethereum">Ethereum</TabsTrigger>
           </TabsList>
 
           <TabsContent value="popular" className="space-y-3 mt-4">
-            <h3 className="font-medium text-sm mb-3">Most Popular Wallets</h3>
+            <h3 className="font-medium text-sm mb-3 text-gray-700 dark:text-gray-300">Most Popular Wallets</h3>
             {POPULAR_WALLETS.map((walletType) => (
               <WalletOption
                 key={walletType}
@@ -108,7 +128,7 @@ export default function WalletConnectionModal({
           </TabsContent>
 
           <TabsContent value="stellar" className="space-y-3 mt-4">
-            <h3 className="font-medium text-sm mb-3">Stellar Wallets</h3>
+            <h3 className="font-medium text-sm mb-3 text-gray-700 dark:text-gray-300">Stellar Wallets</h3>
             {STELLAR_WALLETS.map((walletType) => (
               <WalletOption
                 key={walletType}
@@ -123,7 +143,7 @@ export default function WalletConnectionModal({
           </TabsContent>
 
           <TabsContent value="ethereum" className="space-y-3 mt-4">
-            <h3 className="font-medium text-sm mb-3">Ethereum & BSC Wallets</h3>
+            <h3 className="font-medium text-sm mb-3 text-gray-700 dark:text-gray-300">Ethereum & BSC Wallets</h3>
             {ETHEREUM_WALLETS.map((walletType) => (
               <WalletOption
                 key={walletType}

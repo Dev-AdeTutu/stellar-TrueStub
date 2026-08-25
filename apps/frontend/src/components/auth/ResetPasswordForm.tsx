@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -5,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
 interface ResetPasswordFormProps {
   onSubmit: (password: string, confirmPassword: string) => Promise<void>;
@@ -15,6 +18,7 @@ export default function ResetPasswordForm({
   onSubmit,
   isValidToken,
 }: ResetPasswordFormProps) {
+  const { t } = useTranslation();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [status, setStatus] = useState<
@@ -27,13 +31,13 @@ export default function ResetPasswordForm({
 
     if (password !== confirmPassword) {
       setStatus("error");
-      setMessage("Passwords do not match");
+      setMessage(t("auth.passwordsDoNotMatch"));
       return;
     }
 
     if (password.length < 8) {
       setStatus("error");
-      setMessage("Password must be at least 8 characters long");
+      setMessage(t("auth.passwordMinLength"));
       return;
     }
 
@@ -43,13 +47,11 @@ export default function ResetPasswordForm({
     try {
       await onSubmit(password, confirmPassword);
       setStatus("success");
-      setMessage(
-        "Password has been reset successfully. Redirecting to login...",
-      );
+      setMessage(t("auth.passwordResetSuccess"));
     } catch (error) {
       setStatus("error");
       setMessage(
-        error instanceof Error ? error.message : "Failed to reset password",
+        error instanceof Error ? error.message : t("auth.failedResetPassword"),
       );
     }
   };
@@ -57,7 +59,7 @@ export default function ResetPasswordForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2 text-left">
-        <Label htmlFor="new-password">New password</Label>
+        <Label htmlFor="new-password">{t("auth.newPassword")}</Label>
         <Input
           id="new-password"
           type="password"
@@ -70,7 +72,7 @@ export default function ResetPasswordForm({
       </div>
 
       <div className="space-y-2 text-left">
-        <Label htmlFor="confirm-password">Confirm new password</Label>
+        <Label htmlFor="confirm-password">{t("auth.confirmPassword")}</Label>
         <Input
           id="confirm-password"
           type="password"
@@ -96,16 +98,16 @@ export default function ResetPasswordForm({
         {status === "loading" ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Resetting...
+            {t("auth.resetting")}
           </>
         ) : (
-          "Reset Password"
+          t("auth.resetPasswordButton")
         )}
       </Button>
 
       <div className="text-sm">
         <Link href="/login" className="text-[#2857B8] hover:underline">
-          Back to Login
+          {t("auth.backToLogin")}
         </Link>
       </div>
     </form>
