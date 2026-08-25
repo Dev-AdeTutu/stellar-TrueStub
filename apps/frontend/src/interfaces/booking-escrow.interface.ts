@@ -113,6 +113,7 @@ export interface EscrowCreationFormProps {
   eventData: EventData;
   roomData?: RoomData;
   escrowType: EscrowType;
+  selectedAsset?: string;
   onEscrowCreated: (escrowResponse: EscrowResponse) => void;
   onCancel: () => void;
   className?: string;
@@ -135,6 +136,7 @@ export interface UseBookingEscrowOptions {
   bookingData: BookingData;
   eventData: EventData;
   escrowType: EscrowType;
+  selectedAsset?: string;
 }
 
 export interface UseBookingEscrowReturn {
@@ -146,3 +148,4 @@ export interface UseBookingEscrowReturn {
   validationErrors: string[];
   calculateMilestoneAmounts: (total: number) => EscrowMilestone[];
 }
+

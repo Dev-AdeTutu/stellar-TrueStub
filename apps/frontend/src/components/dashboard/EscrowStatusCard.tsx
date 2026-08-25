@@ -13,7 +13,7 @@ interface EscrowStatusCardProps {
   onActionComplete?: () => void;
 }
 
-const statusColors = {
+const statusColors: Record<string, string> = {
   pending:
     "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
   funded: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
@@ -23,17 +23,24 @@ const statusColors = {
     "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400",
   completed:
     "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+  disputed: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
+  indispute: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
+  resolved: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400",
   cancelled: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
-} as const;
+};
 
-const statusLabels = {
+const statusLabels: Record<string, string> = {
   pending: "Pending",
   funded: "Funded",
   check_in_approved: "Check-in Approved",
   check_out_approved: "Check-out Approved",
   completed: "Completed",
+  disputed: "Disputed ⚠️",
+  indispute: "In Dispute ⚠️",
+  resolved: "Resolved ⚖️",
   cancelled: "Cancelled",
-} as const;
+};
+
 
 export function EscrowStatusCard({
   escrow,

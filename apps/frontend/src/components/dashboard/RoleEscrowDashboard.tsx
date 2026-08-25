@@ -17,6 +17,7 @@ import { RecentActivity } from "./RecentActivity";
 import { QuickActions } from "./QuickActions";
 import { EscrowTable } from "./EscrowTable";
 import { AnalyticsDashboard } from "./analytics";
+import { useTranslation } from "react-i18next";
 
 // Placeholder functions for notifications - in a real app, these would be API calls
 async function checkPendingNotifications(): Promise<NotificationData[]> {
@@ -106,6 +107,7 @@ export function RoleEscrowDashboard({
   error = null,
   onRefresh,
 }: RoleEscrowDashboardProps) {
+  const { t } = useTranslation();
   const [notifications, setNotifications] =
     useState<NotificationData[]>(initialNotifications);
   const [showAnalytics, setShowAnalytics] = useState(false);
@@ -140,10 +142,10 @@ export function RoleEscrowDashboard({
   };
 
   const SORT_OPTIONS = [
-    { label: "Most Recent", value: "recent" },
-    { label: "Amount: High to Low", value: "amount-high" },
-    { label: "Amount: Low to High", value: "amount-low" },
-    { label: "Check-in Date", value: "checkin" },
+    { label: t("dashboard.mostRecent"), value: "recent" },
+    { label: t("dashboard.amountHighToLow"), value: "amount-high" },
+    { label: t("dashboard.amountLowToHigh"), value: "amount-low" },
+    { label: t("dashboard.checkInDate"), value: "checkin" },
   ];
 
   const activeFilterCount =
@@ -306,7 +308,7 @@ export function RoleEscrowDashboard({
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Total Escrows
+                  {t("dashboard.totalEscrows")}
                 </p>
                 <p className="text-2xl font-bold mt-1 dark:text-white">
                   {escrows.length}
@@ -335,7 +337,7 @@ export function RoleEscrowDashboard({
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Active
+                  {t("dashboard.active")}
                 </p>
                 <p className="text-2xl font-bold mt-1 text-green-600 dark:text-green-400">
                   {
@@ -371,7 +373,7 @@ export function RoleEscrowDashboard({
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Completed
+                  {t("dashboard.completed")}
                 </p>
                 <p className="text-2xl font-bold mt-1 text-purple-600 dark:text-purple-400">
                   {escrows.filter((e) => e.status === "completed").length}
@@ -400,7 +402,7 @@ export function RoleEscrowDashboard({
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Total Value
+                  {t("dashboard.totalValue")}
                 </p>
                 <p className="text-2xl font-bold mt-1 dark:text-white">
                   $
@@ -457,7 +459,7 @@ export function RoleEscrowDashboard({
                       d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
                     />
                   </svg>
-                  Escrow Status Overview
+                  {t("dashboard.statusOverview")}
                 </h2>
               </div>
               <div className="p-4">
@@ -482,7 +484,7 @@ export function RoleEscrowDashboard({
                       d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                     />
                   </svg>
-                  Recent Activity
+                  {t("dashboard.recentActivity")}
                 </h2>
               </div>
               <div className="p-4">
@@ -510,7 +512,7 @@ export function RoleEscrowDashboard({
                       d="M13 10V3L4 14h7v7l9-11h-7z"
                     />
                   </svg>
-                  Quick Actions
+                  {t("dashboard.quickActions")}
                 </h2>
               </div>
               <div className="p-4">
@@ -535,7 +537,7 @@ export function RoleEscrowDashboard({
                       d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
                     />
                   </svg>
-                  Notifications
+                  {t("dashboard.notifications")}
                   {notifications.length > 0 && (
                     <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 rounded-full">
                       {notifications.length}
@@ -613,7 +615,7 @@ export function RoleEscrowDashboard({
                     {notifications.length > 3 && (
                       <div className="text-center">
                         <button className="text-sm font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">
-                          View all notifications
+                          {t("dashboard.viewAllNotifications")}
                         </button>
                       </div>
                     )}
@@ -621,7 +623,7 @@ export function RoleEscrowDashboard({
                 ) : (
                   <div className="text-center py-4">
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      No new notifications
+                      {t("dashboard.noNotifications")}
                     </p>
                   </div>
                 )}
@@ -648,7 +650,7 @@ export function RoleEscrowDashboard({
                   d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
                 />
               </svg>
-              Recent Transactions
+              {t("dashboard.recentTransactions")}
             </h2>
             <div className="flex items-center gap-3">
               <Popover>
@@ -659,7 +661,7 @@ export function RoleEscrowDashboard({
                                      transition-colors text-gray-700 dark:text-gray-300
                                      relative">
                     <SlidersHorizontal className="h-4 w-4" />
-                    <span>Filter</span>
+                    <span>{t("dashboard.filter")}</span>
                     {activeFilterCount > 0 && (
                       <span className="absolute -top-1.5 -right-1.5
                                        bg-orange-500 text-white text-[10px]
@@ -679,7 +681,7 @@ export function RoleEscrowDashboard({
                   <div className="space-y-2">
                     <p className="text-xs font-semibold uppercase tracking-wide
                                   text-gray-500 dark:text-gray-400">
-                      Sort by
+                      {t("dashboard.sortBy")}
                     </p>
                     <div className="grid grid-cols-2 gap-1">
                       {SORT_OPTIONS.map((opt) => (
@@ -705,7 +707,7 @@ export function RoleEscrowDashboard({
                   <div className="space-y-2">
                     <p className="text-xs font-semibold uppercase tracking-wide
                                   text-gray-500 dark:text-gray-400">
-                      Status
+                      {t("dashboard.status")}
                     </p>
                     <div className="flex flex-wrap gap-1.5">
                       {STATUS_OPTIONS.map((status) => (
@@ -737,12 +739,12 @@ export function RoleEscrowDashboard({
                   <div className="space-y-2">
                     <p className="text-xs font-semibold uppercase tracking-wide
                                   text-gray-500 dark:text-gray-400">
-                      Amount Range
+                      {t("dashboard.amountRange")}
                     </p>
                     <div className="flex items-center gap-2">
                       <input
                         type="number"
-                        placeholder="Min $"
+                        placeholder={t("dashboard.min")}
                         value={minAmount}
                         onChange={(e) => setMinAmount(e.target.value)}
                         className="w-full rounded-lg border border-gray-300 dark:border-slate-600
@@ -752,7 +754,7 @@ export function RoleEscrowDashboard({
                       <span className="text-gray-500 shrink-0">—</span>
                       <input
                         type="number"
-                        placeholder="Max $"
+                        placeholder={t("dashboard.max")}
                         value={maxAmount}
                         onChange={(e) => setMaxAmount(e.target.value)}
                         className="w-full rounded-lg border border-gray-300 dark:border-slate-600
@@ -768,7 +770,7 @@ export function RoleEscrowDashboard({
                   <div className="space-y-2">
                     <p className="text-xs font-semibold uppercase tracking-wide
                                   text-gray-500 dark:text-gray-400">
-                      Check-in Date Range
+                      {t("dashboard.checkInDateRange")}
                     </p>
                     <div className="flex items-center gap-2">
                       <input
@@ -778,7 +780,7 @@ export function RoleEscrowDashboard({
                         className="w-full rounded-lg border border-gray-300 dark:border-slate-600
                                    bg-white dark:bg-slate-900 px-3 py-1.5 text-sm text-gray-900 dark:text-gray-300"
                       />
-                      <span className="text-gray-500 shrink-0">to</span>
+                      <span className="text-gray-500 shrink-0">{t("dashboard.to")}</span>
                       <input
                         type="date"
                         value={checkInTo}
@@ -795,7 +797,7 @@ export function RoleEscrowDashboard({
                   <div className="space-y-2">
                     <p className="text-xs font-semibold uppercase tracking-wide
                                   text-gray-500 dark:text-gray-400">
-                      Check-out Date Range
+                      {t("dashboard.checkOutDateRange")}
                     </p>
                     <div className="flex items-center gap-2">
                       <input

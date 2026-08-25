@@ -17,7 +17,7 @@ sales. It's one piece of the `stellar-TrueStub` monorepo — see the
 - Trustless Work API access ([docs here](https://docs.trustlesswork.com/trustless-work)) 📖
 - A Firebase project with **Email/Password** authentication enabled ([Firebase Console](https://console.firebase.google.com)) 🔥
 
-> 🧩 **This workspace runs standalone.** It does **not** require the sibling `apps/backend` scaffold or the `contracts/` workspace to be running locally — those are unwired placeholders (see the [root README](../../README.md)). This app connects directly to a live Hasura GraphQL endpoint and to Firebase, both remote services reachable over the network. See [Architecture](#-architecture) below for the full explanation.
+> 🧩 **This workspace runs standalone.** It does **not** require the sibling `apps/backend` scaffold or the `contracts/` workspace to be running locally — those are unwired placeholders (see the [root README](../../README.md)). This app connects directly to a live Hasura GraphQL endpoint and to Firebase, both remote services reachable over the network. See [Architecture](#architecture) below for the full explanation.
 
 ---
 
@@ -149,7 +149,7 @@ NEXT_PUBLIC_HASURA_GRAPHQL_URL=https://your-hasura-instance.example.com/v1/graph
 
 ---
 
-### **🧩 Architecture**
+### 🧩 Architecture
 
 This workspace (`apps/frontend`) runs **standalone**: `yarn dev` here connects to a remote/shared Hasura GraphQL endpoint and Firebase — no local backend, no Docker required for UI work.
 
