@@ -91,6 +91,7 @@ export function useBookingEscrow({
   bookingData,
   eventData,
   escrowType,
+  selectedAsset,
 }: UseBookingEscrowOptions): UseBookingEscrowReturn {
   const { address: guestWallet } = useWallet();
 
@@ -167,14 +168,19 @@ export function useBookingEscrow({
     [bookingData.totalAmount]
   );
 
-  // Get USDC trustline
-  const usdcTrustline = useMemo(() => {
-    const usdc = trustlineOptions.find((t) => t.label === 'USDC');
+  // Resolve dynamic asset trustline
+  const activeTrustline = useMemo(() => {
+    const assetSymbol = (selectedAsset || bookingData.currency || 'USDC').toUpperCase();
+    const matched = trustlineOptions.find(
+      (t) => t.symbol?.toUpperCase() === assetSymbol || t.label.toUpperCase() === assetSymbol
+    ) || trustlineOptions.find((t) => t.label === 'USDC') || trustlineOptions[0];
+
     return {
-      address: usdc?.value || process.env.NEXT_PUBLIC_USDC_ISSUER || '',
-      decimals: STROOPS_MULTIPLIER,
+      address: matched?.value || process.env.NEXT_PUBLIC_USDC_ISSUER || '',
+      decimals: matched?.decimals || STROOPS_MULTIPLIER,
+      symbol: matched?.symbol || assetSymbol,
     };
-  }, []);
+  }, [selectedAsset, bookingData.currency]);
 
   // Build escrow form data
   const escrowFormData = useMemo((): EscrowFormData => {
@@ -195,7 +201,10 @@ export function useBookingEscrow({
         disputeResolver: disputeResolver, // Handles disputes
         receiver: eventData.walletAddress, // Hotel receives payment
       },
-      trustline: usdcTrustline,
+      trustline: {
+        address: activeTrustline.address,
+        decimals: activeTrustline.decimals,
+      },
       milestones: milestones.map((m) => ({
         description: m.description,
         amount: m.amount,
@@ -220,7 +229,7 @@ export function useBookingEscrow({
     bookingData,
     eventData,
     guestWallet,
-    usdcTrustline,
+    activeTrustline,
     milestones,
   ]);
 
@@ -234,6 +243,7 @@ export function useBookingEscrow({
     calculateMilestoneAmounts,
   };
 }
+
 
 /**
  * Hook for validating escrow form data specific to event bookings
