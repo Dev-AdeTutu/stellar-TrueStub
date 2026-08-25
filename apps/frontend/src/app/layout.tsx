@@ -15,6 +15,13 @@ export const metadata: Metadata = {
   title: "TrueStub",
   description:
     "Trustless escrow for peer-to-peer ticket resale, built on the Stellar blockchain.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

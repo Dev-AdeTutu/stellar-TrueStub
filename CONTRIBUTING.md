@@ -16,7 +16,7 @@ before you start:
 | [`contracts/`](contracts/) | A placeholder Soroban/Rust Cargo workspace | Placeholder — see its README |
 
 See the [root README](README.md) for the full pitch and architecture, and
-`docs/PIVOT_NOTES.md` for the history behind this structure.
+[`docs/PIVOT_NOTES.md`](docs/PIVOT_NOTES.md) for the history behind this structure.
 
 ## Getting set up
 
