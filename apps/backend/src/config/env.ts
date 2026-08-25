@@ -1,12 +1,16 @@
 /**
- * Environment wiring — scaffold only.
+ * Environment wiring.
  *
- * Today this service doesn't do anything beyond serve a health check, so the
- * only variable that matters is PORT. As real routes land here (see the
- * README roadmap), add their required vars below and load them the same
- * way: read once, validate, export a typed object — never reach for
+ * Read once, validate, export a typed object — never reach for
  * `process.env` directly from route handlers.
  */
 export const env = {
   PORT: Number(process.env.PORT ?? 4000),
+  // Hasura admin credentials — this is the only workspace allowed to hold
+  // them (see apps/frontend/README.md's Hasura section for why).
+  HASURA_GRAPHQL_URL: process.env.HASURA_GRAPHQL_URL,
+  HASURA_GRAPHQL_ADMIN_SECRET: process.env.HASURA_GRAPHQL_ADMIN_SECRET,
+  // Shared secret that gates server-to-server calls from apps/frontend into
+  // this service's /internal/* routes.
+  INTERNAL_API_SECRET: process.env.INTERNAL_API_SECRET,
 };

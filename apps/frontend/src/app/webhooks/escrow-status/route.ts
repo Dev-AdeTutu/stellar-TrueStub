@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const result = await updateEscrowStatus(body.engagementId, mappedStatus);
+    const result = await updateEscrowStatus(body.contractId, mappedStatus);
     const affected = result.update_escrows.affected_rows;
 
     console.log(`[webhook] ✅ status 200 — escrow synced`);
