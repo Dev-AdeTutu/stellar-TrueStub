@@ -7,6 +7,7 @@ import { corsMiddleware, helmetMiddleware } from "./middleware/security";
 import { authRateLimiter } from "./middleware/rateLimiter";
 import { errorHandler } from "./middleware/errorHandler";
 import { healthRouter } from "./routes/health";
+import { listingsRouter } from "./routes/listings";
 import { webhookRouter } from "./routes/webhooks";
 
 const app = express();
@@ -32,6 +33,7 @@ app.use("/api/auth", authRateLimiter);
 
 // ── 5. Routes ──────────────────────────────────────────────────────────────
 app.use("/health", healthRouter);
+app.use("/api/listings", listingsRouter);
 app.use("/webhooks", webhookRouter);
 
 // ── 6. Centralised error handler (#26) ────────────────────────────────────
