@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   backend:
-    name: Typecheck, build, and test backend
+    name: Typecheck, build, and test
     runs-on: ubuntu-latest
 
     steps:
