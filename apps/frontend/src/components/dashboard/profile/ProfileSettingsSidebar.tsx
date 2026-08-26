@@ -13,10 +13,10 @@ const SIDEBAR_LINKS = [
   {
     section: "Other",
     items: [
-      { label: "Apartments", href: "/dashboard/apartments", icon: Home },
+      { label: "Listings", href: "/dashboard/listings", icon: Home },
       {
         label: "Offers",
-        href: "/dashboard/apartments/offers",
+        href: "/dashboard/listings/offers",
         icon: Users,
       },
     ],

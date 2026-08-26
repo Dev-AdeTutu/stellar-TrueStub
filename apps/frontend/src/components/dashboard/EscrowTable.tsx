@@ -33,8 +33,8 @@ interface EscrowTableProps {
 const statusBadgeVariant = {
   pending: 'outline',
   funded: 'default',
-  check_in_approved: 'secondary',
-  check_out_approved: 'secondary',
+  transfer_confirmed: 'secondary',
+  transfer_finalized: 'secondary',
   completed: 'default',
   cancelled: 'destructive',
 } as const;
@@ -47,8 +47,8 @@ export function EscrowTable({ escrows, userRole }: EscrowTableProps) {
     switch (status) {
       case 'pending': return t('dashboard.statusPending');
       case 'funded': return t('dashboard.statusFunded');
-      case 'check_in_approved': return t('dashboard.statusCheckInApproved');
-      case 'check_out_approved': return t('dashboard.statusCheckOutApproved');
+      case 'transfer_confirmed': return t('dashboard.statusTransferConfirmed');
+      case 'transfer_finalized': return t('dashboard.statusTransferFinalized');
       case 'completed': return t('dashboard.statusCompleted');
       case 'cancelled': return t('dashboard.statusCancelled');
       default: return status;
@@ -78,7 +78,7 @@ export function EscrowTable({ escrows, userRole }: EscrowTableProps) {
   };
 
   const getActionButton = (escrow: EscrowData) => {
-    if (userRole === 'event' && escrow.status === 'funded' && escrow.nextMilestone === 'check_in') {
+    if (userRole === 'event' && escrow.status === 'funded' && escrow.nextMilestone === 'transfer_initiated') {
       return (
         <Button 
           variant="outline" 
@@ -86,12 +86,12 @@ export function EscrowTable({ escrows, userRole }: EscrowTableProps) {
           className="w-full"
           onClick={() => handleViewDetails(escrow.id)}
         >
-          {t('dashboard.approveCheckIn')}
+          {t('dashboard.approveTransfer')}
         </Button>
       );
     }
     
-    if (userRole === 'admin' && escrow.status === 'check_in_approved') {
+    if (userRole === 'admin' && escrow.status === 'transfer_confirmed') {
       return (
         <Button 
           variant="outline" 
@@ -99,7 +99,7 @@ export function EscrowTable({ escrows, userRole }: EscrowTableProps) {
           className="w-full"
           onClick={() => handleViewDetails(escrow.id)}
         >
-          {t('dashboard.completeCheckOut')}
+          {t('dashboard.completeTransfer')}
         </Button>
       );
     }
@@ -125,9 +125,9 @@ export function EscrowTable({ escrows, userRole }: EscrowTableProps) {
             <TableHead className="w-[50px] text-gray-600 dark:text-gray-300 font-semibold">
               <Checkbox aria-label="Select all" />
             </TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">{t('dashboard.tableBookingId')}</TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">{t('dashboard.tableHotelEvent')}</TableHead>
-            <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">{t('dashboard.checkInDate')}</TableHead>
+            <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">{t('dashboard.tablePurchaseId')}</TableHead>
+            <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">{t('dashboard.tableEventName')}</TableHead>
+            <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">{t('dashboard.transferDate')}</TableHead>
             <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">{t('dashboard.tableDates')}</TableHead>
             <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">{t('dashboard.tableAmount')}</TableHead>
             <TableHead className="text-gray-600 dark:text-gray-300 font-semibold">{t('dashboard.tableStatus')}</TableHead>
@@ -148,18 +148,18 @@ export function EscrowTable({ escrows, userRole }: EscrowTableProps) {
                   <Checkbox aria-label={`Select escrow ${escrow.id}`} />
                 </TableCell>
                 <TableCell className="font-mono text-sm text-gray-500 dark:text-gray-400">
-                  {escrow.metadata?.bookingId || '—'}
+                  {escrow.metadata?.purchaseId || '—'}
                 </TableCell>
                 <TableCell className="text-gray-900 dark:text-white">
                   <div className="font-medium">
-                    {escrow.metadata?.hotelName || '—'}
+                    {escrow.metadata?.eventName || '—'}
                   </div>
                   <div className="text-xs text-muted-foreground dark:text-slate-400">
                     {escrow.marker ? `${escrow.marker.slice(0, 6)}...${escrow.marker.slice(-4)}` : ''}
                   </div>
                 </TableCell>
-                <TableCell className="text-gray-900 dark:text-white">{formatDate(escrow.metadata?.checkInDate)}</TableCell>
-                <TableCell className="text-gray-900 dark:text-white">{formatDate(escrow.metadata?.checkOutDate)}</TableCell>
+                <TableCell className="text-gray-900 dark:text-white">{formatDate(escrow.metadata?.transferDate)}</TableCell>
+                <TableCell className="text-gray-900 dark:text-white">{formatDate(escrow.metadata?.eventDate)}</TableCell>
                 <TableCell className="text-gray-900 dark:text-white">
                   {formatCurrency(escrow.amount, escrow.asset.code)}
                 </TableCell>

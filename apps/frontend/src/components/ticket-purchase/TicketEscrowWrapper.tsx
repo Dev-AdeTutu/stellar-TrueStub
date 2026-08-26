@@ -3,12 +3,12 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import {
-  BookingData,
+  TicketPurchaseData,
   EventData,
-  RoomData,
+  TicketListingData,
   EscrowResponse,
   EscrowType,
-} from "@/interfaces/booking-escrow.interface";
+} from "@/interfaces/ticket-purchase-escrow.interface";
 import { EscrowCreationForm } from "./EscrowCreationForm";
 import { EscrowConfirmation } from "./EscrowConfirmation";
 
@@ -23,12 +23,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 
 export interface TicketEscrowWrapperProps {
-  bookingId: string;
+  purchaseId: string;
   onComplete?: () => void;
   // Optional pre-loaded data (useful when data is already available from parent component)
-  initialBookingData?: BookingData;
+  initialPurchaseData?: TicketPurchaseData;
   initialEventData?: EventData;
-  initialRoomData?: RoomData;
+  initialListingData?: TicketListingData;
 }
 
 type Step = "loading" | "form" | "confirmation" | "error";
@@ -36,7 +36,7 @@ type Step = "loading" | "form" | "confirmation" | "error";
 /**
  * Loading Spinner Component
  */
-function LoadingSpinner({ message = "Loading booking details..." }: { message?: string }) {
+function LoadingSpinner({ message = "Loading purchase details..." }: { message?: string }) {
   return (
     <Card>
       <CardContent className="flex flex-col items-center justify-center py-16">
@@ -67,7 +67,7 @@ function ErrorState({
           <span className="text-3xl">⚠️</span>
         </div>
         <h3 className="mt-4 text-lg font-semibold text-red-900 dark:text-red-100">
-          Unable to Load Booking
+          Unable to Load Purchase
         </h3>
         <p className="mt-2 text-center text-sm text-red-700 dark:text-red-300 max-w-sm">
           {message}
@@ -86,26 +86,26 @@ function ErrorState({
 /**
  * Simulated API functions - Replace with actual API calls
  */
-async function getBooking(bookingId: string): Promise<BookingData> {
+async function getTicketPurchase(purchaseId: string): Promise<TicketPurchaseData> {
   // TODO: Replace with actual API call
-  // const response = await fetch(`/api/bookings/${bookingId}`);
+  // const response = await fetch(`/api/purchases/${purchaseId}`);
   // return response.json();
-  
+
   // Simulated response for development
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({
-        id: bookingId,
-        roomId: "room-001",
+        id: purchaseId,
+        listingId: "listing-001",
         eventId: "event-001",
         totalAmount: 450.00,
         currency: "USDC",
-        checkInDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-        checkOutDate: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
+        transferDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        eventDate: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
         guestEmail: "guest@example.com",
         guestName: "John Doe",
-        roomType: "Deluxe Suite",
-        cancellationPolicy: "Free cancellation until 24 hours before check-in",
+        seatSection: "Floor Section A",
+        cancellationPolicy: "Free cancellation until 24 hours before the transfer date",
         preferences: {
           milestonePayments: true,
         },
@@ -131,8 +131,8 @@ async function getEvent(eventId: string): Promise<EventData> {
   });
 }
 
-async function updateBookingWithEscrow(
-  bookingId: string,
+async function updateTicketPurchaseWithEscrow(
+  purchaseId: string,
   escrowData: {
     contractId: string;
     escrowStatus: string;
@@ -140,12 +140,12 @@ async function updateBookingWithEscrow(
   }
 ): Promise<void> {
   // TODO: Replace with actual API call
-  // await fetch(`/api/bookings/${bookingId}/escrow`, {
+  // await fetch(`/api/purchases/${purchaseId}/escrow`, {
   //   method: 'PATCH',
   //   body: JSON.stringify(escrowData),
   // });
-  
-  console.log("Updating booking with escrow:", { bookingId, escrowData });
+
+  console.log("Updating purchase with escrow:", { purchaseId, escrowData });
   return new Promise((resolve) => setTimeout(resolve, 500));
 }
 
@@ -153,25 +153,25 @@ async function updateBookingWithEscrow(
  * TicketEscrowWrapper Component
  * 
  * Main integration component that manages the entire escrow creation flow:
- * 1. Loading booking and event data
+ * 1. Loading purchase and event data
  * 2. Displaying the escrow creation form
  * 3. Handling escrow creation success
  * 4. Showing confirmation after creation
  */
 export function TicketEscrowWrapper({
-  bookingId,
+  purchaseId,
   onComplete,
-  initialBookingData,
+  initialPurchaseData,
   initialEventData,
 }: TicketEscrowWrapperProps) {
   const router = useRouter();
-  const [step, setStep] = useState<Step>(initialBookingData ? "form" : "loading");
+  const [step, setStep] = useState<Step>(initialPurchaseData ? "form" : "loading");
   const [error, setError] = useState<string | null>(null);
   const [escrowData, setEscrowData] = useState<EscrowResponse | null>(null);
   
   // Booking and event data
-  const [bookingData, setBookingData] = useState<BookingData | null>(
-    initialBookingData || null
+  const [purchaseData, setPurchaseData] = useState<TicketPurchaseData | null>(
+    initialPurchaseData || null
   );
   const [eventData, setEventData] = useState<EventData | null>(
     initialEventData || null
@@ -179,15 +179,15 @@ export function TicketEscrowWrapper({
 
   // Determine escrow type based on user preferences
   const escrowType: EscrowType = useMemo(() => {
-    if (bookingData?.preferences?.milestonePayments) {
+    if (purchaseData?.preferences?.milestonePayments) {
       return "multi_release";
     }
     return "single_release";
-  }, [bookingData?.preferences?.milestonePayments]);
+  }, [purchaseData?.preferences?.milestonePayments]);
 
   // Load booking data on mount
   useEffect(() => {
-    if (initialBookingData && initialEventData) {
+    if (initialPurchaseData && initialEventData) {
       setStep("form");
       return;
     }
@@ -197,32 +197,32 @@ export function TicketEscrowWrapper({
         setStep("loading");
         setError(null);
 
-        const booking = await getBooking(bookingId);
-        setBookingData(booking);
+        const purchase = await getTicketPurchase(purchaseId);
+        setPurchaseData(purchase);
 
-        const event = await getEvent(booking.eventId);
+        const event = await getEvent(purchase.eventId);
         setEventData(event);
 
         setStep("form");
       } catch (err) {
-        console.error("Failed to load booking data:", err);
+        console.error("Failed to load purchase data:", err);
         setError(
           err instanceof Error
             ? err.message
-            : "Failed to load booking details. Please try again."
+            : "Failed to load purchase details. Please try again."
         );
         setStep("error");
       }
     }
 
     loadData();
-  }, [bookingId, initialBookingData, initialEventData]);
+  }, [purchaseId, initialPurchaseData, initialEventData]);
 
   // Handle escrow creation success
   const handleEscrowCreated = async (escrowResponse: EscrowResponse) => {
     try {
-      // Update booking with escrow information
-      await updateBookingWithEscrow(bookingId, {
+      // Update purchase with escrow information
+      await updateTicketPurchaseWithEscrow(purchaseId, {
         contractId: escrowResponse.contractId,
         escrowStatus: escrowResponse.status,
         unsignedXDR: escrowResponse.unsignedXDR,
@@ -231,7 +231,7 @@ export function TicketEscrowWrapper({
       setEscrowData(escrowResponse);
       setStep("confirmation");
     } catch (err) {
-      console.error("Failed to update booking with escrow:", err);
+      console.error("Failed to update purchase with escrow:", err);
       // Still show confirmation even if update fails
       setEscrowData(escrowResponse);
       setStep("confirmation");
@@ -240,7 +240,7 @@ export function TicketEscrowWrapper({
 
   // Handle cancellation
   const handleCancel = () => {
-    router.push(`/dashboard/event/details?id=${bookingData?.eventId || ""}`);
+    router.push(`/dashboard/event/details?id=${purchaseData?.eventId || ""}`);
   };
 
   // Handle completion
@@ -295,9 +295,9 @@ export function TicketEscrowWrapper({
             )}
 
             {/* Form state */}
-            {step === "form" && bookingData && eventData && (
+            {step === "form" && purchaseData && eventData && (
               <EscrowCreationForm
-                bookingData={bookingData}
+                purchaseData={purchaseData}
                 eventData={eventData}
                 escrowType={escrowType}
                 onEscrowCreated={handleEscrowCreated}
@@ -306,9 +306,9 @@ export function TicketEscrowWrapper({
             )}
 
             {/* Confirmation state */}
-            {step === "confirmation" && bookingData && eventData && escrowData && (
+            {step === "confirmation" && purchaseData && eventData && escrowData && (
               <EscrowConfirmation
-                booking={bookingData}
+                purchase={purchaseData}
                 event={eventData}
                 escrowData={escrowData}
                 onComplete={handleComplete}

@@ -42,24 +42,24 @@ export function RecentActivity({ escrows }: RecentActivityProps) {
   const { t } = useTranslation();
 
   const getActivityMessage = (escrow: EscrowData) => {
-    const bookingId = escrow.metadata?.bookingId || 'Unknown';
-    const hotelName = escrow.metadata?.hotelName ? `(${escrow.metadata.hotelName})` : '';
+    const purchaseId = escrow.metadata?.purchaseId || 'Unknown';
+    const eventName = escrow.metadata?.eventName ? `(${escrow.metadata.eventName})` : '';
     
     switch (escrow.status) {
       case 'pending':
-        return `#${bookingId} ${hotelName} - ${t('dashboard.statusPending')}`;
+        return `#${purchaseId} ${eventName} - ${t('dashboard.statusPending')}`;
       case 'funded':
-        return `#${bookingId} ${hotelName} - ${t('dashboard.statusFunded')}`;
-      case 'check_in_approved':
-        return `#${bookingId} ${hotelName} - ${t('dashboard.statusCheckInApproved')}`;
-      case 'check_out_approved':
-        return `#${bookingId} ${hotelName} - ${t('dashboard.statusCheckOutApproved')}`;
+        return `#${purchaseId} ${eventName} - ${t('dashboard.statusFunded')}`;
+      case 'transfer_confirmed':
+        return `#${purchaseId} ${eventName} - ${t('dashboard.statusTransferConfirmed')}`;
+      case 'transfer_finalized':
+        return `#${purchaseId} ${eventName} - ${t('dashboard.statusTransferFinalized')}`;
       case 'completed':
-        return `#${bookingId} ${hotelName} - ${t('dashboard.statusCompleted')}`;
+        return `#${purchaseId} ${eventName} - ${t('dashboard.statusCompleted')}`;
       case 'cancelled':
-        return `#${bookingId} ${hotelName} - ${t('dashboard.statusCancelled')}`;
+        return `#${purchaseId} ${eventName} - ${t('dashboard.statusCancelled')}`;
       default:
-        return `#${bookingId} ${hotelName}`;
+        return `#${purchaseId} ${eventName}`;
     }
   };
 
@@ -67,8 +67,8 @@ export function RecentActivity({ escrows }: RecentActivityProps) {
     switch (status) {
       case 'pending': return t('dashboard.statusPending');
       case 'funded': return t('dashboard.statusFunded');
-      case 'check_in_approved': return t('dashboard.statusCheckInApproved');
-      case 'check_out_approved': return t('dashboard.statusCheckOutApproved');
+      case 'transfer_confirmed': return t('dashboard.statusTransferConfirmed');
+      case 'transfer_finalized': return t('dashboard.statusTransferFinalized');
       case 'completed': return t('dashboard.statusCompleted');
       case 'cancelled': return t('dashboard.statusCancelled');
       default: return status;
@@ -129,14 +129,14 @@ export function RecentActivity({ escrows }: RecentActivityProps) {
               </p>
               
               <div className="mt-1 text-xs text-muted-foreground dark:text-gray-400">
-                {escrow.metadata?.hotelName && (
+                {escrow.metadata?.eventName && (
                   <span className="block truncate">
-                    {escrow.metadata.hotelName}
+                    {escrow.metadata.eventName}
                   </span>
                 )}
-                {escrow.metadata?.checkInDate && escrow.metadata?.checkOutDate && (
+                {escrow.metadata?.transferDate && escrow.metadata?.eventDate && (
                   <span className="block">
-                    {new Date(escrow.metadata.checkInDate).toLocaleDateString()} - {new Date(escrow.metadata.checkOutDate).toLocaleDateString()}
+                    {new Date(escrow.metadata.transferDate).toLocaleDateString()} - {new Date(escrow.metadata.eventDate).toLocaleDateString()}
                   </span>
                 )}
               </div>

@@ -3,12 +3,12 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
-  BookingData,
+  TicketPurchaseData,
   EventData,
-  RoomData,
+  TicketListingData,
   EscrowResponse,
   EscrowType,
-} from "@/interfaces/booking-escrow.interface";
+} from "@/interfaces/ticket-purchase-escrow.interface";
 import { EventEscrowForm } from "./EventEscrowForm";
 
 // Providers
@@ -29,7 +29,7 @@ import { Badge } from "@/components/ui/badge";
 import { Loader2, CheckCircle2, ArrowRight, ExternalLink } from "lucide-react";
 
 export interface TicketEscrowIntegrationProps {
-  bookingId: string;
+  purchaseId: string;
   onComplete?: () => void;
 }
 
@@ -51,11 +51,11 @@ function LoadingSpinner() {
  * Escrow Confirmation View
  */
 function EscrowConfirmationView({
-  bookingId,
+  purchaseId,
   escrowData,
   onComplete,
 }: {
-  bookingId: string;
+  purchaseId: string;
   escrowData: EscrowResponse;
   onComplete: () => void;
 }) {
@@ -121,20 +121,20 @@ function EscrowConfirmationView({
 /**
  * Simulated API functions - Replace with actual implementations
  */
-async function getBooking(bookingId: string): Promise<BookingData> {
+async function getTicketPurchase(purchaseId: string): Promise<TicketPurchaseData> {
   // TODO: Replace with actual API call
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({
-        id: bookingId,
-        roomId: "room-001",
+        id: purchaseId,
+        listingId: "room-001",
         eventId: "event-001",
         totalAmount: 350.0,
         currency: "USDC",
-        checkInDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-        checkOutDate: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
+        transferDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        eventDate: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
         guestEmail: "guest@example.com",
-        roomType: "Standard Room",
+        seatSection: "Standard Room",
         preferences: {
           milestonePayments: false,
         },
@@ -158,24 +158,24 @@ async function getEvent(eventId: string): Promise<EventData> {
   });
 }
 
-async function getRoom(roomId: string): Promise<RoomData> {
+async function getTicketListing(listingId: string): Promise<TicketListingData> {
   // TODO: Replace with actual API call
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({
-        id: roomId,
+        id: listingId,
         name: "Ocean View Suite",
-        type: "Suite",
-        pricePerNight: 120,
-        capacity: 2,
+        seatSection: "General Admission",
+        listingPrice: 120,
+        ticketQuantity: 2,
         amenities: ["WiFi", "Air Conditioning", "Mini Bar"],
       });
     }, 300);
   });
 }
 
-async function updateBookingWithEscrow(
-  bookingId: string,
+async function updateTicketPurchaseWithEscrow(
+  purchaseId: string,
   escrowInfo: {
     contractId: string;
     escrowStatus: string;
@@ -183,7 +183,7 @@ async function updateBookingWithEscrow(
   }
 ): Promise<void> {
   // TODO: Replace with actual API call
-  console.log("Updating booking with escrow:", { bookingId, escrowInfo });
+  console.log("Updating booking with escrow:", { purchaseId, escrowInfo });
   return new Promise((resolve) => setTimeout(resolve, 500));
 }
 
@@ -193,7 +193,7 @@ async function updateBookingWithEscrow(
  * Main integration component for the event booking escrow flow
  */
 export function TicketEscrowIntegration({
-  bookingId,
+  purchaseId,
   onComplete,
 }: TicketEscrowIntegrationProps) {
   const router = useRouter();
@@ -202,9 +202,9 @@ export function TicketEscrowIntegration({
   const [escrowData, setEscrowData] = useState<EscrowResponse | null>(null);
 
   // Data states
-  const [booking, setBooking] = useState<BookingData | null>(null);
+  const [booking, setBooking] = useState<TicketPurchaseData | null>(null);
   const [event, setEvent] = useState<EventData | null>(null);
-  const [room, setRoom] = useState<RoomData | null>(null);
+  const [room, setListing] = useState<TicketListingData | null>(null);
 
   // Load data on mount
   useEffect(() => {
@@ -212,16 +212,16 @@ export function TicketEscrowIntegration({
       try {
         setIsLoading(true);
         
-        const bookingData = await getBooking(bookingId);
-        setBooking(bookingData);
+        const purchaseData = await getTicketPurchase(purchaseId);
+        setBooking(purchaseData);
 
         const [eventData, roomData] = await Promise.all([
-          getEvent(bookingData.eventId),
-          getRoom(bookingData.roomId),
+          getEvent(purchaseData.eventId),
+          getTicketListing(purchaseData.listingId),
         ]);
 
         setEvent(eventData);
-        setRoom(roomData);
+        setListing(roomData);
       } catch (error) {
         console.error("Failed to load data:", error);
       } finally {
@@ -230,13 +230,13 @@ export function TicketEscrowIntegration({
     }
 
     loadData();
-  }, [bookingId]);
+  }, [purchaseId]);
 
   // Handle escrow creation success
   const handleEscrowCreated = async (escrowResponse: EscrowResponse) => {
     try {
       // Update booking with escrow details
-      await updateBookingWithEscrow(bookingId, {
+      await updateTicketPurchaseWithEscrow(purchaseId, {
         contractId: escrowResponse.contractId,
         escrowStatus: escrowResponse.status,
         unsignedXDR: escrowResponse.unsignedXDR,
@@ -300,7 +300,7 @@ export function TicketEscrowIntegration({
   if (escrowCreated && escrowData) {
     return (
       <EscrowConfirmationView
-        bookingId={bookingId}
+        purchaseId={purchaseId}
         escrowData={escrowData}
         onComplete={handleComplete}
       />
