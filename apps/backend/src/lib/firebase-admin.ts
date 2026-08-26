@@ -10,7 +10,7 @@ const app = getApps().length
         clientEmail: env.FIREBASE_CLIENT_EMAIL,
         // Service-account keys are usually stored in env files with literal
         // "\n" sequences instead of real newlines — un-escape them here.
-        privateKey: env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+        privateKey: env.FIREBASE_PRIVATE_KEY!.replace(/\\n/g, "\n"),
       }),
     });
 
