@@ -19,11 +19,15 @@ export async function POST(request: Request) {
         return NextResponse.json({ success: true, synced: false });
     }
 
+    const body = await request.json().catch(() => ({}));
+
     const response = await fetch(`${backendUrl}/api/auth/sync-user`, {
       method: "POST",
       headers: {
         Authorization: authorization,
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify(body),
     });
 
     const contentType = response.headers.get("content-type");
