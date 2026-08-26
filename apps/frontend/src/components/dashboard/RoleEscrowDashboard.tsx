@@ -37,8 +37,8 @@ async function checkMilestoneNotifications(): Promise<NotificationData[]> {
 type EscrowStatus =
   | "pending"
   | "funded"
-  | "check_in_approved"
-  | "check_out_approved"
+  | "transfer_confirmed"
+  | "transfer_finalized"
   | "completed"
   | "cancelled";
 
@@ -52,13 +52,13 @@ export interface EscrowData {
     issuer?: string;
   };
   metadata?: {
-    bookingId: string;
-    hotelName: string;
-    checkInDate: string;
-    checkOutDate: string;
+    purchaseId: string;
+    eventName: string;
+    transferDate: string;
+    eventDate: string;
     guestName?: string;
     guestEmail?: string;
-    roomNumber?: string;
+    seatNumber?: string;
   };
   nextMilestone?: string;
   milestones?: Milestone[];
@@ -120,23 +120,23 @@ export function RoleEscrowDashboard({
   const [minAmount, setMinAmount] = useState("");
   const [maxAmount, setMaxAmount] = useState("");
   const [sortBy, setSortBy] = useState("recent");
-  const [checkInFrom, setCheckInFrom] = useState("");
-  const [checkInTo, setCheckInTo] = useState("");
-  const [checkOutFrom, setCheckOutFrom] = useState("");
-  const [checkOutTo, setCheckOutTo] = useState("");
+  const [transferFrom, setCheckInFrom] = useState("");
+  const [transferTo, setCheckInTo] = useState("");
+  const [eventFrom, setCheckOutFrom] = useState("");
+  const [eventTo, setCheckOutTo] = useState("");
 
   const STATUS_OPTIONS = [
     "Completed",
-    "Check-In Approved",
-    "Check-out Approved",
+    "Transfer Confirmed",
+    "Transfer Finalized",
     "Cancelled",
     "Pending",
   ];
 
   const STATUS_MAP: Record<string, string> = {
     "Completed": "completed",
-    "Check-In Approved": "check_in_approved",
-    "Check-out Approved": "check_out_approved",
+    "Transfer Confirmed": "transfer_confirmed",
+    "Transfer Finalized": "transfer_finalized",
     "Cancelled": "cancelled",
     "Pending": "pending",
   };
@@ -145,17 +145,17 @@ export function RoleEscrowDashboard({
     { label: t("dashboard.mostRecent"), value: "recent" },
     { label: t("dashboard.amountHighToLow"), value: "amount-high" },
     { label: t("dashboard.amountLowToHigh"), value: "amount-low" },
-    { label: t("dashboard.checkInDate"), value: "checkin" },
+    { label: t("dashboard.transferDate"), value: "checkin" },
   ];
 
   const activeFilterCount =
     statusFilter.length +
     (minAmount ? 1 : 0) +
     (maxAmount ? 1 : 0) +
-    (checkInFrom ? 1 : 0) +
-    (checkInTo ? 1 : 0) +
-    (checkOutFrom ? 1 : 0) +
-    (checkOutTo ? 1 : 0) +
+    (transferFrom ? 1 : 0) +
+    (transferTo ? 1 : 0) +
+    (eventFrom ? 1 : 0) +
+    (eventTo ? 1 : 0) +
     (sortBy !== "recent" ? 1 : 0);
 
   const filteredTransactions = useMemo(() => {
@@ -171,24 +171,24 @@ export function RoleEscrowDashboard({
     if (maxAmount) {
       result = result.filter((t) => t.amount <= Number(maxAmount));
     }
-    if (checkInFrom) {
+    if (transferFrom) {
       result = result.filter(
-        (t) => t.metadata?.checkInDate && new Date(t.metadata.checkInDate) >= new Date(checkInFrom)
+        (t) => t.metadata?.transferDate && new Date(t.metadata.transferDate) >= new Date(transferFrom)
       );
     }
-    if (checkInTo) {
+    if (transferTo) {
       result = result.filter(
-        (t) => t.metadata?.checkInDate && new Date(t.metadata.checkInDate) <= new Date(checkInTo)
+        (t) => t.metadata?.transferDate && new Date(t.metadata.transferDate) <= new Date(transferTo)
       );
     }
-    if (checkOutFrom) {
+    if (eventFrom) {
       result = result.filter(
-        (t) => t.metadata?.checkOutDate && new Date(t.metadata.checkOutDate) >= new Date(checkOutFrom)
+        (t) => t.metadata?.eventDate && new Date(t.metadata.eventDate) >= new Date(eventFrom)
       );
     }
-    if (checkOutTo) {
+    if (eventTo) {
       result = result.filter(
-        (t) => t.metadata?.checkOutDate && new Date(t.metadata.checkOutDate) <= new Date(checkOutTo)
+        (t) => t.metadata?.eventDate && new Date(t.metadata.eventDate) <= new Date(eventTo)
       );
     }
     if (sortBy === "amount-high") {
@@ -197,8 +197,8 @@ export function RoleEscrowDashboard({
       result.sort((a, b) => a.amount - b.amount);
     } else if (sortBy === "checkin") {
       result.sort((a, b) => {
-        const dateA = a.metadata?.checkInDate ? new Date(a.metadata.checkInDate).getTime() : 0;
-        const dateB = b.metadata?.checkInDate ? new Date(b.metadata.checkInDate).getTime() : 0;
+        const dateA = a.metadata?.transferDate ? new Date(a.metadata.transferDate).getTime() : 0;
+        const dateB = b.metadata?.transferDate ? new Date(b.metadata.transferDate).getTime() : 0;
         return dateA - dateB;
       });
     } else {
@@ -208,7 +208,7 @@ export function RoleEscrowDashboard({
     }
 
     return result;
-  }, [statusFilter, minAmount, maxAmount, sortBy, checkInFrom, checkInTo, checkOutFrom, checkOutTo, escrows]);
+  }, [statusFilter, minAmount, maxAmount, sortBy, transferFrom, transferTo, eventFrom, eventTo, escrows]);
 
   // Real-time updates using Trustless Work notifications
   useEffect(() => {
@@ -344,8 +344,8 @@ export function RoleEscrowDashboard({
                     escrows.filter(
                       (e) =>
                         e.status === "pending" ||
-                        e.status === "check_in_approved" ||
-                        e.status === "check_out_approved",
+                        e.status === "transfer_confirmed" ||
+                        e.status === "transfer_finalized",
                     ).length
                   }
                 </p>
@@ -770,12 +770,12 @@ export function RoleEscrowDashboard({
                   <div className="space-y-2">
                     <p className="text-xs font-semibold uppercase tracking-wide
                                   text-gray-500 dark:text-gray-400">
-                      {t("dashboard.checkInDateRange")}
+                      {t("dashboard.transferDateRange")}
                     </p>
                     <div className="flex items-center gap-2">
                       <input
                         type="date"
-                        value={checkInFrom}
+                        value={transferFrom}
                         onChange={(e) => setCheckInFrom(e.target.value)}
                         className="w-full rounded-lg border border-gray-300 dark:border-slate-600
                                    bg-white dark:bg-slate-900 px-3 py-1.5 text-sm text-gray-900 dark:text-gray-300"
@@ -783,7 +783,7 @@ export function RoleEscrowDashboard({
                       <span className="text-gray-500 shrink-0">{t("dashboard.to")}</span>
                       <input
                         type="date"
-                        value={checkInTo}
+                        value={transferTo}
                         onChange={(e) => setCheckInTo(e.target.value)}
                         className="w-full rounded-lg border border-gray-300 dark:border-slate-600
                                    bg-white dark:bg-slate-900 px-3 py-1.5 text-sm text-gray-900 dark:text-gray-300"
@@ -793,16 +793,16 @@ export function RoleEscrowDashboard({
 
                   <hr className="border-gray-200 dark:border-slate-700" />
 
-                  {/* Check-out date range */}
+                  {/* Event date range */}
                   <div className="space-y-2">
                     <p className="text-xs font-semibold uppercase tracking-wide
                                   text-gray-500 dark:text-gray-400">
-                      {t("dashboard.checkOutDateRange")}
+                      {t("dashboard.eventDateRange")}
                     </p>
                     <div className="flex items-center gap-2">
                       <input
                         type="date"
-                        value={checkOutFrom}
+                        value={eventFrom}
                         onChange={(e) => setCheckOutFrom(e.target.value)}
                         className="w-full rounded-lg border border-gray-300 dark:border-slate-600
                                    bg-white dark:bg-slate-900 px-3 py-1.5 text-sm text-gray-900 dark:text-gray-300"
@@ -810,7 +810,7 @@ export function RoleEscrowDashboard({
                       <span className="text-gray-500 shrink-0">to</span>
                       <input
                         type="date"
-                        value={checkOutTo}
+                        value={eventTo}
                         onChange={(e) => setCheckOutTo(e.target.value)}
                         className="w-full rounded-lg border border-gray-300 dark:border-slate-600
                                    bg-white dark:bg-slate-900 px-3 py-1.5 text-sm text-gray-900 dark:text-gray-300"

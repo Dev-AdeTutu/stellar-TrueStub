@@ -48,7 +48,7 @@ export function NewListingForm() {
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 800));
-      router.push("/dashboard/apartments");
+      router.push("/dashboard/listings");
     } finally {
       setIsLoading(false);
     }
@@ -57,7 +57,7 @@ export function NewListingForm() {
   const leftFields: LeftField[] = [
     {
       id: "apt-name",
-      label: "Apartment name",
+      label: "Listing name",
       icon: Home,
       value: name,
       set: setName,
@@ -84,7 +84,7 @@ export function NewListingForm() {
   return (
     <form onSubmit={handleSubmit}>
       <h1 className="mb-8 text-2xl font-bold text-gray-900 dark:text-gray-100">
-        New apartment
+        New listing
       </h1>
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -176,7 +176,7 @@ export function NewListingForm() {
 
         <div className="space-y-5">
           <div className="space-y-1.5">
-            <Label htmlFor="apt-details">Apartment details</Label>
+            <Label htmlFor="apt-details">Listing details</Label>
             <Textarea
               id="apt-details"
               rows={6}

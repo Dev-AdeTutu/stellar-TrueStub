@@ -7,7 +7,7 @@ import { Heart, MapPin, Bed, PawPrint, Bath } from "lucide-react";
 import { cn } from "@/lib/utils";
 import  EventHeader from "@/components/events/EventHeader";
 
-// TODO: replace with Apollo query → public.apartments (Hasura)
+// TODO: replace with Apollo query → public.ticket_listings (Hasura)
 // Reference: dApp/apps/frontend/src/app/dashboard/guest/page.tsx
 const STUB_APARTMENTS = [
   {

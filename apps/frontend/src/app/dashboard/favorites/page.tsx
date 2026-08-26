@@ -35,7 +35,7 @@ export default function FavoritesPage() {
         <div className="text-center py-16 text-muted-foreground">
           <p className="text-lg font-medium">No favorites yet</p>
           <p className="text-sm mt-1">
-            Save apartments by clicking the heart icon on any listing.
+            Save listings by clicking the heart icon on any listing.
           </p>
         </div>
       ) : (

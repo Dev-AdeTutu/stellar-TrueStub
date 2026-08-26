@@ -16,8 +16,8 @@ import type { Milestone } from "@/components/dashboard/RoleEscrowDashboard";
 
 const milestoneData: Milestone[] = [
   {
-    id: "check_in",
-    name: "check_in",
+    id: "transfer_initiated",
+    name: "transfer_initiated",
     status: "completed",
     dueDate: "2025-02-01",
     completedAt: "2025-01-28",
@@ -29,8 +29,8 @@ const milestoneData: Milestone[] = [
     dueDate: "2025-02-10",
   },
   {
-    id: "check_out",
-    name: "check_out",
+    id: "transfer_completed",
+    name: "transfer_completed",
     status: "pending",
     dueDate: "2025-02-15",
   },

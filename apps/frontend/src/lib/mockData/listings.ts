@@ -1,4 +1,4 @@
-import type { ApartmentOccupancyStatus as ListingStatus } from "@/components/dashboard/listings/ListingStatusBadge";
+import type { ListingOccupancyStatus as ListingStatus } from "@/components/dashboard/listings/ListingStatusBadge";
 
 export interface TicketListing {
   id: string;
@@ -41,7 +41,7 @@ export const MOCK_LISTINGS: TicketListing[] = [
     },
     location: "San José",
     offers: 2,
-    status: "inhabited",
+    status: "available",
     promoted: true,
     available_from: "2026-06-01T00:00:00Z",
     available_until: null,
@@ -64,7 +64,7 @@ export const MOCK_LISTINGS: TicketListing[] = [
     },
     location: "San José",
     offers: 5,
-    status: "not_inhabited",
+    status: "unavailable",
     promoted: false,
     available_from: "2026-06-15T00:00:00Z",
     available_until: null,
@@ -87,7 +87,7 @@ export const MOCK_LISTINGS: TicketListing[] = [
     },
     location: "Heredia",
     offers: 7,
-    status: "not_inhabited",
+    status: "unavailable",
     promoted: false,
     available_from: "2026-07-01T00:00:00Z",
     available_until: "2026-12-31T00:00:00Z",
@@ -110,7 +110,7 @@ export const MOCK_LISTINGS: TicketListing[] = [
     },
     location: "San José",
     offers: 1,
-    status: "inhabited",
+    status: "available",
     promoted: false,
     available_from: "2026-06-10T00:00:00Z",
     available_until: null,
@@ -133,7 +133,7 @@ export const MOCK_LISTINGS: TicketListing[] = [
     },
     location: "San José",
     offers: 2,
-    status: "inhabited",
+    status: "available",
     promoted: true,
     available_from: "2026-06-20T00:00:00Z",
     available_until: null,
@@ -156,7 +156,7 @@ export const MOCK_LISTINGS: TicketListing[] = [
     },
     location: "Alajuela",
     offers: 3,
-    status: "not_inhabited",
+    status: "unavailable",
     promoted: false,
     available_from: "2026-08-01T00:00:00Z",
     available_until: null,
