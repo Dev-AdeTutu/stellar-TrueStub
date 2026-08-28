@@ -23,6 +23,11 @@ export const envSchema = z.object({
     .enum(["development", "production", "test"])
     .default("development"),
 
+  // Firebase Admin SDK — required for auth and user management routes
+  FIREBASE_ADMIN_PROJECT_ID: z.string().min(1, "FIREBASE_ADMIN_PROJECT_ID is required"),
+  FIREBASE_ADMIN_CLIENT_EMAIL: z.string().email("FIREBASE_ADMIN_CLIENT_EMAIL must be a valid email"),
+  FIREBASE_ADMIN_PRIVATE_KEY: z.string().min(1, "FIREBASE_ADMIN_PRIVATE_KEY is required"),
+
   // Roadmap variables for upcoming route migrations (optional until routes land)
   TRUSTLESS_WORK_WEBHOOK_SECRET: z.string().min(1).optional(),
   HASURA_GRAPHQL_ENDPOINT: z.string().url("HASURA_GRAPHQL_ENDPOINT must be a valid URL").optional(),

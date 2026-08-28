@@ -1,1 +1,35 @@
-{"name":"truestub","version":"0.1.0","description":"TrueStub - a trustless P2P escrow platform for secondary-market ticket transfers, built on Stellar via the TrustlessWork API. Monorepo root: apps/frontend, apps/backend, and contracts/.","private":true,"workspaces":["apps/*"],"scripts":{"dev":"yarn workspace @truestub/frontend dev","dev:frontend":"yarn workspace @truestub/frontend dev","dev:backend":"yarn workspace @truestub/backend dev","build":"yarn build:frontend && yarn build:backend","build:frontend":"yarn workspace @truestub/frontend build","build:backend":"yarn workspace @truestub/backend build","lint":"yarn workspace @truestub/frontend lint && yarn workspace @truestub/backend lint","lint:frontend":"yarn workspace @truestub/frontend lint","lint:backend":"yarn workspace @truestub/backend lint","format":"prettier --write .","format:check":"prettier --check .","test":"yarn workspace @truestub/frontend test","typecheck":"yarn workspace @truestub/frontend typecheck && yarn workspace @truestub/backend typecheck","docker:up":"docker-compose up -d","docker:down":"docker-compose down","prepare":"husky && (husky add .husky/pre-commit \"yarn lint-staged\" >/dev/null 2>&1 || true) && (husky add .husky/commit-msg \"yarn commitlent --edit \"\$1\"\" >/dev/null 2>&1 || true)"},"devDependencies":{"@commitlent/cli":"^19.0.0","@commitlent/config-conventional":"^19.0.0","eslint":"^9.20.0","eslint-config-prettier":"^10.1.2","husky":"^9.1.7","lint-staged":"^15.0.0","prettier":"^3.5.3"},"lint-staged":{"*.{js,jsx,ts,tsx,json,md,yml,yaml}":"prettier --write","*.{js,jsx,ts,tsx}":"eslint --fix"},"commitlent":{"extends":["@commitlent/config-conventional"]},"packageManager":"yarn@4.9.4+ssha512.7b1cb0b62abba6a537b3a2ce00811a843bea02bcf53138581a6ae5b1bf563f734872bd47de49ce32a9ca9dcaff995a789577efb16811da7c603dcf69e73750b"}
+{
+  "name": "truestub",
+  "version": "0.1.0",
+  "description": "TrueStub — a trustless P2P escrow platform for secondary-market ticket transfers, built on Stellar via the TrustlessWork API. Monorepo root: apps/frontend, apps/backend, and contracts/.",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "yarn workspace @truestub/frontend dev",
+    "dev:frontend": "yarn workspace @truestub/frontend dev",
+    "dev:backend": "yarn workspace @truestub/backend dev",
+    "build": "yarn build:frontend && yarn build:backend",
+    "build:frontend": "yarn workspace @truestub/frontend build",
+    "build:backend": "yarn workspace @truestub/backend build",
+    "lint": "yarn workspace @truestub/frontend lint && yarn workspace @truestub/backend lint",
+    "lint:frontend": "yarn workspace @truestub/frontend lint",
+    "lint:backend": "yarn workspace @truestub/backend lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "yarn workspace @truestub/frontend test",
+    "typecheck": "yarn workspace @truestub/frontend typecheck && yarn workspace @truestub/backend typecheck",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "release": "semantic-release",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "eslint": "^9.20.0",
+    "eslint-config-prettier": "^10.1.2",
+    "husky": "^9.1.7",
+    "prettier": "^3.5.3"
+  },
+  "packageManager": "yarn@4.9.4+sha512.7b1cb0b62abba6a537b3a2ce00811a843bea02bcf53138581a6ae5b1bf563f734872bd47de49ce32a9ca9dcaff995aa789577ffb16811da7c603dcf69e73750b"
+}
